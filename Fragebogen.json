@@ -1,78 +1,546 @@
 [
     {
-        "text": "Erste Schritte",
-        "antworten" : [
-            {
-                "wahl" : 0,
-                "text": "Was ist eine Bachelorarbeit",
-                "next":1,
-                "feedback":"Die Bachelorthesis ist ein Text, mit dem Sie nachweisen sollen, dass Sie wissenschaftlich arbeiten können."
-            },
-            {
-                "wahl" : 1,
-                "text": "Themenfindung",
-                "next":2,
-                "feedback":"Bei der Themenfindung soll das Thema der Thesis gefunden werden."
-            },
-            {
-                "wahl" : 2,
-                "text": "Antwort C",
-                "next":3,
-                "feedback":"Feedback 3"
-            }
-        ],
-        "id":1,
-        "type": 0
+    "text":"Erste Schritte",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Was ist eine Bachelorarbeit?",
+        "next": 1,
+        "feedback": "Die Bachelothesis ist ein Text mit dem Sie nachweisen sollen, dass Sie ein vorgegebenes Thema mit den erlernten Verfahren und Techniken ihres Studiengebietes bearbeiten können."
+        },
+        {
+        "wahl": 1,
+        "text":"Themenfindung",
+        "next": 2,
+        "feedback": "Die Themenfindung ist der erste Schritt bei einer Bacherlorarbeit. Im folgenden finden Sie einige Hinweise die dabei helfen."
+        },
+        {
+        "wahl": 2,
+        "text":"Antwort c",
+        "next": 2,
+        "feedback": "Feedback3"
+        }
+    ],
+    "id": 1
     },
     {
-        "text": "Themenfindung",
-        "antworten": [
-            {
-                "wahl" : 0,
-                "text": "Was ist eine Bachelorarbeit",
-                "next":1,
-                "feedback":"Die Bachelorthesis ist ein Text, mit dem Sie nachweisen sollen, dass Sie wissenschaftlich arbeiten können."
-            },
-            {
-                "wahl" : 1,
-                "text": "Themenfindung",
-                "next":2,
-                "feedback":"Bei der Themenfindung soll das Thema der Thesis gefunden werden."
-            },
-            {
-                "wahl" : 2,
-                "text": "Antwort C",
-                "next":3,
-                "feedback":"Feedback 3"
-            }
+        "text":"Themenfindung?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Wie finde ich ein Thema?",
+            "next": 3,
+            "feedback": "Das Thema sollte zu Ihren Interessen und Fähigkeiten passen. Möchten sie ein Thema in der Softwareentwicklung oder lieber richtung E-learning? <br> Brainstormen Sie hierzu. Was möchten Sie rausfinden? Nutzen sie aktuelle Themen, lesen Sie aktuelle Fachartikel und populärwissenschaftliche Veröffentlichungen oder recherchieren sie im Web oder in der Bibliothek. Reden sie mit Ihren Praxisbetreuern, Dozenten, Kommilitonen, Freunden und Verwandten, oder holen Sie sich inspiration auf Konferenzen. <a href=\\https://lernen.h-da.de/course/view.php?id=11311>Konferenzen</a>"
+        },
+        {
+            "wahl": 1,
+            "text":"Welche Themen darf ich bearbeiten?",
+            "next": 3,
+            "feedback": "Sie dürfen alle Themen aus allen Themenbereichen bearbeiten, die sie im Studium vermittelt bekommen haben."
+        },
+        {
+            "wahl": 2,
+            "text":"Welche Themengebiete sind nicht geeignet?",
+            "next": 3,
+            "feedback": "Themen welche zu komplex oder zu simpel sind. Die Bachelothesis ist ein Text.Im Rahmen einer Bachelorthesis sollen sie nachweisen, dass Sie ein vorgegebenes Thema mit den erlernten Verfahren und Techniken ihres Studiengebietes bearbeiten können.  Der Praxisanteil ist Grundlage für den auszuformulierenden Text."
+        },
+        {
+            "wahl": 3,
+            "text":"Beispielthemen",
+            "next": 3,
+            "feedback": "Semantic Web </p> Nutzung der Maschinellen Übersetzung für die Übersetzung in Leichte Sprache </p> Erprobung weiterer Methoden zur Extraktion von Terminologie und zur Indexierung </p> Implementierung von Regeln für die automatische Prüfung auf Wissenschaftlichkeit in der Sprache in LanguageTool."
+        }
         ],
-        "id":2,
-        "type": 0
+        "id": 2
     },
     {
-        "text": "Antwort C",
-        "antworten": [
-            {
-                "wahl" : 0,
-                "text": "Was ist eine Bachelorarbeit",
-                "next":1,
-                "feedback":"Die Bachelorthesis ist ein Text, mit dem Sie nachweisen sollen, dass Sie wissenschaftlich arbeiten können."
-            },
-            {
-                "wahl" : 1,
-                "text": "Themenfindung",
-                "next":2,
-                "feedback":"Bei der Themenfindung soll das Thema der Thesis gefunden werden."
-            },
-            {
-                "wahl" : 2,
-                "text": "Antwort C",
-                "next":3,
-                "feedback":"Feedback 3"
-            }
-        ],
-        "id":3,
-        "type": 0
+    "text":"Soll die Arbeit in einem Betrieb oder an der Hochschule geschrieben werden?",
+    "antworten":[
+    {
+        "wahl": 0,
+        "text":"Betrieb",
+        "next": 5,
+        "feedback": "Feedback1"
+    },
+    {
+        "wahl": 1,
+        "text":"Hochschule",
+        "next": 4,
+        "feedback": "Feedback2"
     }
-    
+    ],
+    "id": 3
+    },
+    {
+    "text":"Hochschulfragen?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Antwort a",
+        "next": 5,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Antwort b",
+        "next": 5,
+        "feedback": "Feedback2"
+        },
+              {
+                "wahl": 2,
+                "text":"Antwort c",
+                "next": 5,
+                "feedback": "Feedback3"
+              }
+            ],
+            "id": 4
+    },
+    {
+        "text":"Ergibt sich aus dem Praktikum ein Themenvorschlag?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Ja",
+            "next": 6,
+            "feedback": "Feedback1"
+            
+        },
+        {
+            "wahl": 1,
+            "text":"Nein",
+            "next": 6,
+            "feedback": "Feedback2"
+        }
+        ],
+        "id": 5
+    },
+    {
+    "text":"Gibt es im Betrieb einen qualifizierten Betreuer? (mindestens einen Bachelor)",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Ja",
+        "next": 7,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Nein",
+        "next": 7,
+        "feedback": "Feedback2"
+        }
+    ],
+    "id": 6
+    },
+    {
+        "text":"Tendierst Du eher zur Programmierung/Entwicklung von Systemen oder nicht ?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Ja",
+            "next": 8,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Nein",
+            "next": 8,
+            "feedback": "Feedback2"
+        }
+        ],
+        "id": 7
+    },
+    {
+    "text":"Hast Du selbst ein Ziel mit der Bachelorarbeit?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Ich möchte wissenschaftlich arbeiten",
+        "next": 9,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Ich möchte neue Technologie lernen",
+        "next": 9,
+        "feedback": "Feedback2"
+        },
+        {
+        "wahl": 2,
+        "text":"Ich möchte bestehende Kenntnisse vertiefen",
+        "next": 9,
+        "feedback": "Feedback3"
+    },
+                      {
+                        "wahl": 3,
+                        "text":"Ich möchte die  Ergebnisse aus dem Praktikum nutzen und in eine Arbeit überführen",
+                        "next": 9,
+                        "feedback": "Feedback3"
+                      },
+                      {
+                        "wahl": 4,
+                        "text":"Ich möchte ein privates Projekt als Bachelorarbeit bearbeiten",
+                        "next": 9,
+                        "feedback": "Feedback3"
+                      },
+                      {
+                        "wahl": 5,
+                        "text":"Nein, ich habe kein Ziel",
+                        "next": 9,
+                        "feedback": "Feedback3"
+                      }
+                    ],
+                    "id": 8
+    },
+    {
+        "text":"Was kannst Du? (EINORDNUNG)",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Programmiere",
+            "next": 10,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"gut gestalten (Adobe … )",
+            "next": 10,
+            "feedback": "Feedback2"
+        },
+        {
+            "wahl": 2,
+            "text":"gut Filme machen",
+            "next": 10,
+            "feedback": "Feedback3"
+        }
+        ],
+        "id": 9
+    },
+    {
+    "text":"Gibt es ein Fach im Studium, dass Dir besonderen Spaß gemacht hat? Nenne deine drei Lieblingsfächer im Studium",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Antwort a",
+        "next": 11,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Antwort b",
+        "next": 11,
+        "feedback": "Feedback2"
+        },
+        {
+        "wahl": 2,
+        "text":"Antwort c",
+        "next": 11,
+        "feedback": "Feedback3"
+        }
+    ],
+    "id": 10,
+    "type": 1
+    },
+    {
+        "text":"Nenne Deine drei Fächer im Studium, die Dir am wenigsten Spaß gemacht haben",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Antwort a",
+            "next": 12,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Antwort b",
+            "next": 12,
+            "feedback": "Feedback2"
+        },
+        {
+            "wahl": 2,
+            "text":"Antwort c",
+            "next": 12,
+            "feedback": "Feedback3"
+        }
+        ],
+        "id": 11,
+        "type": 2
+    },
+    {
+    "text":"Welche praktische Erfahrung mit Rechnern hast Du?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Unix",
+        "next": 13,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Windows",
+        "next": 13,
+        "feedback": "Feedback2"
+        },
+        {
+        "wahl": 2,
+        "text":"MacOS",
+        "next": 13,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 3,
+        "text":"App Entwicklung",
+        "next": 13,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 4,
+        "text":"Web Entwicklung",
+        "next": 13,
+        "feedback": "Feedback3"
+        }
+    ],
+    "id": 12
+    },
+    {
+        "text":"Welche der folgenden Titel von bereits gelaufenen Bachelorthesen findest Du interessant?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"10 Titel",
+            "next": 14,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Antwort b",
+            "next": 14,
+            "feedback": "Feedback2"
+        },
+        {
+            "wahl": 2,
+            "text":"Antwort c",
+            "next": 14,
+            "feedback": "Feedback3"
+        }
+        ],
+        "id": 13
+    },
+    {
+    "text":"Welche der folgenden Arbeitsschwerpunkte findest Du interessant?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Computergrafik und VR",
+        "next": 15,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Multimedia, Webanwendungen, App Entwicklung und Audioprogrammierung",
+        "next": 15,
+        "feedback": "Feedback2"
+        },
+        {
+        "wahl": 2,
+        "text":"E-Learning",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 3,
+        "text":"IT-Sicherheit",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 4,
+        "text":"Programmierung",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 5,
+        "text":"Machine Learning",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 6,
+        "text":"Mensch Computer Interaktion",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 7,
+        "text":"Hardware Entwicklung mit Mikrocontrollern",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 8,
+        "text":"Betriebssysteme",
+        "next": 15,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 9,
+        "text":"Verteilte Systeme und Cloud Computing",
+        "next": 15,
+        "feedback": "Feedback3"
+        }
+    ],
+    "id": 14
+    },
+    {
+        "text":"In welcher Sprache möchtest Du die Arbeit schreiben?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Antwort a",
+            "next": 16,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Antwort b",
+            "next": 16,
+            "feedback": "Feedback2"
+        },
+        {
+            "wahl": 2,
+            "text":"Antwort c",
+            "next": 16,
+            "feedback": "Feedback3"
+        }
+        ],
+        "id": 15,
+        "type": 2
+    },
+    {
+    "text":"Möchtest Du in deiner Arbeit ein Programm/System entwickeln?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Ja",
+        "next": 17,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Nein",
+        "next": 17,
+        "feedback": "Feedback2"
+        }
+    ],
+    "id": 16
+    },
+    {
+        "text":"Möchtest in deiner Arbeit eine Webseite entwickeln ?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Ja",
+            "next": 18,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Nein",
+            "next": 18,
+            "feedback": "Feedback2"
+        }
+        ],
+        "id": 17
+    },
+    {
+    "text":"Möchtest Du deine Ergebnisse evaluieren?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Ja",
+        "next": 19,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Nein",
+        "next": 19,
+        "feedback": "Feedback2"
+        }
+    ],
+    "id": 18
+    },
+    {
+        "text":"Möchtest Du am Konzept eines Systems arbeiten ?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Ja",
+            "next": 20,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Nein",
+            "next": 20,
+            "feedback": "Feedback2"
+        }
+        ],
+        "id": 19
+    },
+    {
+    "text":"Möchtest Du an einer (Marketing)Strategie für ein Produkt/System arbeiten?",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Ja",
+        "next": 21,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Nein",
+        "next": 21,
+        "feedback": "Feedback2"
+        }
+    ],
+    "id": 20
+    },
+    {
+        "text":"Möchtest Du einen Themenbereich mit einer wissenschaftlichen Fragestellung untersuchen und darstellen?",
+        "antworten":[
+        {
+            "wahl": 0,
+            "text":"Ja",
+            "next": 22,
+            "feedback": "Feedback1"
+        },
+        {
+            "wahl": 1,
+            "text":"Nein",
+            "next": 22,
+            "feedback": "Feedback2"
+        }
+        ],
+        "id": 21
+    },
+    {
+    "text":"Abgrenzung: was möchtest auf keinen Fall machen? (Eingabefeld)",
+    "antworten":[
+        {
+        "wahl": 0,
+        "text":"Ja",
+        "next": 0,
+        "feedback": "Feedback1"
+        },
+        {
+        "wahl": 1,
+        "text":"Nein",
+        "next": 0,
+        "feedback": "Feedback2"
+        }
+    ],
+    "id": 22
+    }
 ]
