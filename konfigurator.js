@@ -7,7 +7,6 @@ var newAnswer = 0   //Enthält für jede Frage die Anzahl an neuen Antworten
 window.onload = function() {
     console.log("Seite geladen")
     cont = document.getElementById("text")
-    console.log(cont)
 }
 
 function starten() {
@@ -29,9 +28,7 @@ function modify() {
 function applyJson () {
     console.log("Apply JSON")
     ta = document.getElementById("jsontext").value 
-    //console.log(ta)
     jsondoc = JSON.parse(ta)
-    console.log(jsondoc)
     next()
 }
 
@@ -47,7 +44,6 @@ function next() {
     if(jsonindex < jsondoc.length)
     {
         q = jsondoc[jsonindex]
-        console.log(q)
         var allFields = "<h3>Frage: </h3><br>"
         allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
         allFields += "<h3>Antworten: </h3><br>"
@@ -76,16 +72,12 @@ function save() {
 
     antworten = document.getElementsByClassName('ant')
     nextref = document.getElementsByClassName('ne')
-    console.log(antworten)
-    console.log(nextref)
     for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
         jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].value
     }
-    console.log("New Answer: "+ newAnswer)
     if(newAnswer > 0) {
         lengthAntworten = jsondoc[jsonindex]['antworten'].length
-        console.log(lengthAntworten)
         for(i=0; i < newAnswer; i++) {
             s = {
                 "wahl" : lengthAntworten+i+1,
@@ -93,9 +85,7 @@ function save() {
                 "next":"'"+nextref[lengthAntworten+i].value +"'",
                 "feedback":"Feedback 3"
             }
-            console.log(s)
             jsondoc[jsonindex]['antworten'].push(s)
-            console.log(jsondoc[jsonindex])
         }
     }
 
