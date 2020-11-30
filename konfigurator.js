@@ -50,7 +50,7 @@ function applyJson () {
     for(i=0; i <jsondoc.length; i++) {
         dict[jsondoc[i]['id']] = jsondoc[i]['text']
     }
-
+    createNodesAndEdges(jsondoc)
     next()
 }
 

@@ -170,27 +170,27 @@
         "text":"Ich möchte bestehende Kenntnisse vertiefen",
         "next": 9,
         "feedback": "Feedback3"
-    },
-                      {
-                        "wahl": 3,
-                        "text":"Ich möchte die  Ergebnisse aus dem Praktikum nutzen und in eine Arbeit überführen",
-                        "next": 9,
-                        "feedback": "Feedback3"
-                      },
-                      {
-                        "wahl": 4,
-                        "text":"Ich möchte ein privates Projekt als Bachelorarbeit bearbeiten",
-                        "next": 9,
-                        "feedback": "Feedback3"
-                      },
-                      {
-                        "wahl": 5,
-                        "text":"Nein, ich habe kein Ziel",
-                        "next": 9,
-                        "feedback": "Feedback3"
-                      }
-                    ],
-                    "id": 8
+        },
+        {
+        "wahl": 3,
+        "text":"Ich möchte die  Ergebnisse aus dem Praktikum nutzen und in eine Arbeit überführen",
+        "next": 9,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 4,
+        "text":"Ich möchte ein privates Projekt als Bachelorarbeit bearbeiten",
+        "next": 9,
+        "feedback": "Feedback3"
+        },
+        {
+        "wahl": 5,
+        "text":"Nein, ich habe kein Ziel",
+        "next": 9,
+        "feedback": "Feedback3"
+        }
+        ],
+        "id": 8
     },
     {
         "text":"Was kannst Du? (EINORDNUNG)",
@@ -526,21 +526,21 @@
         "id": 21
     },
     {
-    "text":"Abgrenzung: was möchtest auf keinen Fall machen? (Eingabefeld)",
-    "antworten":[
-        {
-        "wahl": 0,
-        "text":"Ja",
-        "next": 0,
-        "feedback": "Feedback1"
-        },
-        {
-        "wahl": 1,
-        "text":"Nein",
-        "next": 0,
-        "feedback": "Feedback2"
-        }
-    ],
-    "id": 22
+        "text":"Abgrenzung: was möchtest auf keinen Fall machen? (Eingabefeld)",
+        "antworten":[
+            {
+            "wahl": 0,
+            "text":"Ja",
+            "next": 1,
+            "feedback": "Feedback1"
+            },
+            {
+            "wahl": 1,
+            "text":"Nein",
+            "next": 1,
+            "feedback": "Feedback2"
+            }
+        ],
+        "id": 22
     }
 ]

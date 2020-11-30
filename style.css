@@ -47,3 +47,7 @@ input {
 #nextquestion {
     width: 180px;
 }
+
+#container {
+    height: 700px;
+}
