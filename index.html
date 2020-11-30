@@ -9,14 +9,21 @@
     </head>
     <body>
         <h1>digLL Konfigurator</h1>
-        <p id="einleitung">
-            Herzlich willkommen beim digLL Konfigurator. Mit Hilfe dieses Konfigurators ist es möglich den Fragebogen zu Konfigurieren. Dazu kann entweder eine bestehende Vorlage bearbeitet werden oder es kann ein komplett neuer Fragebogen erstellt werden (Kommt erst später ;) )
-        </p>
-        <p id="anweisung">
-            Was möchten Sie tun?
-        </p>
+        <div id="text">
+            <p id="einleitung">
+                Herzlich willkommen beim digLL Konfigurator. Mit Hilfe dieses Konfigurators ist es möglich den Fragebogen zu Konfigurieren. Dazu kann entweder eine bestehende Vorlage bearbeitet werden oder es kann ein komplett neuer Fragebogen erstellt werden (Kommt erst später ;) )
+            </p>
+            <p id="anweisung">
+                Was möchten Sie tun?
+            </p>
        
-        <button onclick="neu()">Einen Fragebogen erstellen</button>
-        <button onclick="modify()">Einen Fragebogen bearbeiten</button>
+            <button onclick="create()">Einen Fragebogen erstellen</button>
+            <button onclick="modify()">Einen Fragebogen bearbeiten</button>
+        </div>
+        <div id="canvas">
+            <p>
+                Später will ich hier einen Canvas hin machen, der die Fragen als Baum anzeigt
+            </p>
+        </div>
      </body>
 </html>

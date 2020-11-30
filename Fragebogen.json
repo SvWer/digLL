@@ -1,0 +1,78 @@
+[
+    {
+        "text": "Erste Schritte",
+        "antworten" : [
+            {
+                "wahl" : 0,
+                "text": "Was ist eine Bachelorarbeit",
+                "next":1,
+                "feedback":"Die Bachelorthesis ist ein Text, mit dem Sie nachweisen sollen, dass Sie wissenschaftlich arbeiten können."
+            },
+            {
+                "wahl" : 1,
+                "text": "Themenfindung",
+                "next":2,
+                "feedback":"Bei der Themenfindung soll das Thema der Thesis gefunden werden."
+            },
+            {
+                "wahl" : 2,
+                "text": "Antwort C",
+                "next":3,
+                "feedback":"Feedback 3"
+            }
+        ],
+        "id":1,
+        "type": 0
+    },
+    {
+        "text": "Themenfindung",
+        "antworten": [
+            {
+                "wahl" : 0,
+                "text": "Was ist eine Bachelorarbeit",
+                "next":1,
+                "feedback":"Die Bachelorthesis ist ein Text, mit dem Sie nachweisen sollen, dass Sie wissenschaftlich arbeiten können."
+            },
+            {
+                "wahl" : 1,
+                "text": "Themenfindung",
+                "next":2,
+                "feedback":"Bei der Themenfindung soll das Thema der Thesis gefunden werden."
+            },
+            {
+                "wahl" : 2,
+                "text": "Antwort C",
+                "next":3,
+                "feedback":"Feedback 3"
+            }
+        ],
+        "id":2,
+        "type": 0
+    },
+    {
+        "text": "Antwort C",
+        "antworten": [
+            {
+                "wahl" : 0,
+                "text": "Was ist eine Bachelorarbeit",
+                "next":1,
+                "feedback":"Die Bachelorthesis ist ein Text, mit dem Sie nachweisen sollen, dass Sie wissenschaftlich arbeiten können."
+            },
+            {
+                "wahl" : 1,
+                "text": "Themenfindung",
+                "next":2,
+                "feedback":"Bei der Themenfindung soll das Thema der Thesis gefunden werden."
+            },
+            {
+                "wahl" : 2,
+                "text": "Antwort C",
+                "next":3,
+                "feedback":"Feedback 3"
+            }
+        ],
+        "id":3,
+        "type": 0
+    }
+    
+]
