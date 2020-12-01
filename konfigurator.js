@@ -60,7 +60,7 @@ function applyJson () {
 function addAnswer() {
     feld = document.getElementById('answers')
     feld.innerHTML += "Antwort        <textarea id='antwort"+i+"' name='antwort"+i+"' class='ant'></textarea>"
-    feld.innerHTML += "Nächste Frage: <textarea id='nextq"+i+"' name='nextq"+i+"' class='ne'></textarea><br>"
+    feld.innerHTML += "Nächste Frage:  "+dropdown(0) + "<br>"
     feld.innerHTML += "Feedback:      <textarea id='feedq"+i+"' name='feedq"+i+"' class='feed'></textarea><br>"
     newAnswer += 1
 }
@@ -69,7 +69,7 @@ function addAnswer() {
     creates string for dropdown-menu over all possible questions
 */
 function dropdown(next) {
-    var select = "<select name='nexequestion' id='nextquestion'>"
+    var select = "<select name='nexequestion' id='nextquestion' class='ne'>"
     for(var key in dict) {
         if (key == next) {
             select += "<option selected='selected' value='"+key+"'>"+key+":"+dict[key]+"</option>"
@@ -147,10 +147,14 @@ function save() {
     antworten = document.getElementsByClassName('ant')
     nextref = document.getElementsByClassName('ne')
     feeds = document.getElementsByClassName('feed')
+
     for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
-        jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].value
+        changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
+        jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
         jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value
+        
+        
     }
     if(newAnswer > 0) {
         lengthAntworten = jsondoc[jsonindex]['antworten'].length
@@ -158,10 +162,11 @@ function save() {
             s = {
                 "wahl" : lengthAntworten+i+1,
                 "text": "'"+antworten[lengthAntworten+i].value +"'",
-                "next": "'"+nextref[lengthAntworten+i].value +"'",
+                "next": "'"+nextref[lengthAntworten+i].selectedIndex +"'",
                 "feedback": "'"+feeds[lengthAntworten+i].value +"'"
             }
             jsondoc[jsonindex]['antworten'].push(s)
+            addEdge(jsonindex, nextref[lengthAntworten+i].selectedIndex)
         }
     }
 

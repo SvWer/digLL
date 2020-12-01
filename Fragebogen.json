@@ -1,27 +1,51 @@
 [
     {
-    "text":"Erste Schritte",
-    "antworten":[
-        {
-        "wahl": 0,
-        "text":"Was ist eine Bachelorarbeit?",
-        "next": 1,
-        "feedback": "Die Bachelothesis ist ein Text mit dem Sie nachweisen sollen, dass Sie ein vorgegebenes Thema mit den erlernten Verfahren und Techniken ihres Studiengebietes bearbeiten können."
-        },
-        {
-        "wahl": 1,
-        "text":"Themenfindung",
-        "next": 2,
-        "feedback": "Die Themenfindung ist der erste Schritt bei einer Bacherlorarbeit. Im folgenden finden Sie einige Hinweise die dabei helfen."
-        },
-        {
-        "wahl": 2,
-        "text":"Antwort c",
-        "next": 2,
-        "feedback": "Feedback3"
-        }
-    ],
-    "id": 1
+        "text":"Damit ich nicht alle Indizes ändern muss",
+        "antworten":[
+            {
+            "wahl": 0,
+            "text":"Was ist eine Bachelorarbeit?",
+            "next": 5,
+            "feedback": "Die Bachelothesis ist ein Text mit dem Sie nachweisen sollen, dass Sie ein vorgegebenes Thema mit den erlernten Verfahren und Techniken ihres Studiengebietes bearbeiten können."
+            },
+            {
+            "wahl": 1,
+            "text":"Themenfindung",
+            "next": 13,
+            "feedback": "Die Themenfindung ist der erste Schritt bei einer Bacherlorarbeit. Im folgenden finden Sie einige Hinweise die dabei helfen."
+            },
+            {
+            "wahl": 2,
+            "text":"Antwort c",
+            "next": 20,
+            "feedback": "Feedback3"
+            }
+        ],
+        "id": 0
+    },
+    {
+        "text":"Erste Schritte",
+        "antworten":[
+            {
+            "wahl": 0,
+            "text":"Was ist eine Bachelorarbeit?",
+            "next": 1,
+            "feedback": "Die Bachelothesis ist ein Text mit dem Sie nachweisen sollen, dass Sie ein vorgegebenes Thema mit den erlernten Verfahren und Techniken ihres Studiengebietes bearbeiten können."
+            },
+            {
+            "wahl": 1,
+            "text":"Themenfindung",
+            "next": 2,
+            "feedback": "Die Themenfindung ist der erste Schritt bei einer Bacherlorarbeit. Im folgenden finden Sie einige Hinweise die dabei helfen."
+            },
+            {
+            "wahl": 2,
+            "text":"Antwort c",
+            "next": 2,
+            "feedback": "Feedback3"
+            }
+        ],
+        "id": 1
     },
     {
         "text":"Themenfindung?",
