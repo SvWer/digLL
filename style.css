@@ -57,3 +57,11 @@ input {
     min-width: 425px;
     border: solid 1px black;
 }
+
+#weiter {
+    float: left;
+}
+
+#zurück {
+    float: left;
+}

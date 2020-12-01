@@ -1,5 +1,5 @@
 var cont
-var jsondoc         // Array, welches dann alle Fragen enthält 
+var jsondoc = []    // Array, welches dann alle Fragen enthält 
 var jsonindex = -1  // Index dafür, bei welcher Frage man gerade ist
 var newAnswer = 0   //Enthält für jede Frage die Anzahl an neuen Antworten
 var dict = {}
@@ -57,11 +57,11 @@ function applyJson () {
 /*
     if you want to add a new answer, this function adds the empty fields
 */
-function addAnswer() {
+function addAnswer( ) {
     feld = document.getElementById('answers')
-    feld.innerHTML += "Antwort        <textarea id='antwort"+i+"' name='antwort"+i+"' class='ant'></textarea>"
+    feld.innerHTML += "Antwort        <textarea id='antwort"+"' name='antwort"+"' class='ant'></textarea>"
     feld.innerHTML += "Nächste Frage:  "+dropdown(0) + "<br>"
-    feld.innerHTML += "Feedback:      <textarea id='feedq"+i+"' name='feedq"+i+"' class='feed'></textarea><br>"
+    feld.innerHTML += "Feedback:      <textarea id='feedq"+"' name='feedq"+"' class='feed'></textarea><br>"
     newAnswer += 1
 }
 
@@ -69,7 +69,7 @@ function addAnswer() {
     creates string for dropdown-menu over all possible questions
 */
 function dropdown(next) {
-    var select = "<select name='nexequestion' id='nextquestion' class='ne'>"
+    var select = "<select name='nextequestion' id='nextquestion' class='ne'>"
     for(var key in dict) {
         if (key == next) {
             select += "<option selected='selected' value='"+key+"'>"+key+":"+dict[key]+"</option>"
@@ -108,7 +108,7 @@ function next() {
     if(jsonindex < jsondoc.length)
     {
         q = jsondoc[jsonindex]
-        var allFields = "<h3>Frage: </h3>"
+        var allFields = "<h3>Frage: " + q.id+ "</h3>"
         allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
         allFields += "Fragentyp: " + createType(q['type']) + "<br>"
         allFields += "<hr>"
@@ -123,8 +123,8 @@ function next() {
         }
         allFields += "</div>"
         allFields += "<button onclick='addAnswer()'>Neue Antwort hinzufügen</button><br>"
-        allFields += "<button onclick='save()'>Speichern und Weiter</button><br>"
-        allFields += "<button onclick='next()'>Weiter</button><br>"
+        allFields += "<button onclick='save(1)' id='weiter'>Weiter</button><br>"
+        allFields += "<button onclick='save(0)' id='zurueck'>Zurück</button><br>"
         cont.innerHTML = allFields
     } else {
         var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
@@ -137,7 +137,7 @@ function next() {
 /*
     If you changed something, this funktion saves all fields for this question
 */
-function save() {
+function save(k) {
     console.log("Check if Changes and Save in Object")
     fr = document.getElementById("frage").value
     jsondoc[jsonindex]['text'] = fr
@@ -152,9 +152,7 @@ function save() {
         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
         changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
         jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
-        jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value
-        
-        
+        jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value     
     }
     if(newAnswer > 0) {
         lengthAntworten = jsondoc[jsonindex]['antworten'].length
@@ -169,14 +167,76 @@ function save() {
             addEdge(jsonindex, nextref[lengthAntworten+i].selectedIndex)
         }
     }
-
+    if(k ==0) {
+        jsonindex -= 2
+    }
     next()
 }
+
+
+
+
+
+
 
 /*
     Function that starts the process to create a new questionnaire
 */
+newCount = 0
+sampleQ = {
+    "text":"Geben Sie hier Ihre Frage ein",
+    "antworten":[],
+    "id": 0
+}
+sampleA = {
+    "wahl": 0,
+    "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein",
+    "next": 5,
+    "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
+    }
+    dict[sampleQ['id']] = sampleQ['text']
 function create() {
-    console.log("Gibt es noch nicht..");
+    var allFields = "<h3>Frage: " + newCount+ "</h3>"
+        allFields += "<textarea id='frage' name='frage'>"+sampleQ.text +"</textarea><br>"
+        allFields += "Fragentyp: " + createType(0) + "<br>"
+        allFields += "<hr>"
+        allFields += "<h3>Antworten: </h3><br>"
+        allFields += "<div id='answers'>"
+        allFields += "Antwort:       <textarea id='antwort"+0+"' name='antwort"+0+"' class='ant'>"+sampleA.text +"</textarea><br>"
+        allFields += "Nächste Frage:  "+dropdown(0) + "<br>"
+        allFields += "Feedback:      <textarea id='feedq"+0+"' name='feedq"+0+"' class='feed'>"+sampleA.feedback  + "</textarea><br>"
+        allFields += "<hr>"
+        
+        allFields += "</div>"
+        allFields += "<button onclick='addAnswer()'>Neue Antwort hinzufügen</button><br>" //Funktioniert
+        allFields += "<button onclick='append()' id='weiter'>Weiter</button><br>"         //
+        allFields += "<button onclick='save(0)' id='zurueck'>Zurück</button><br>"         //
+        cont.innerHTML = allFields
+}
+
+function append() {
+    fr = document.getElementById("frage").value
+    frt = document.getElementById('ftype').value
+    q = {
+        "text":fr,
+        "antworten":[],
+        "type": frt,
+        "id": 0
+    }
+    antworten = document.getElementsByClassName('ant')
+    nextref = document.getElementsByClassName('ne')
+    feeds = document.getElementsByClassName('feed')
+    for(i=0; i < antworten.length; i++) {
+        s = {
+            "wahl" : i,
+            "text": antworten[i].value,
+            "next": nextref[i].selectedIndex ,
+            "feedback": feeds[i].value 
+        }
+        q.antworten.push(s)
+    }
+    jsondoc.push(q)
+    console.log(jsondoc)
+    create()
 }
 

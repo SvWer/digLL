@@ -32,19 +32,14 @@ var xCount = -1;
  */
 
 function createNodesAndEdges(tree) {
-    console.log("Test")
-    console.log(-1%3)
-
     //For every Question create a Node
     for(i=0; i< tree.length; i++) {
         //newNode = node
         var newNode = {
             "id": "n"+(i),
             "label": "Frage " + (i),
-            //"x": Math.floor(Math.random() * 10),
-            "x": xCount%3 + 1,
-            //"y": Math.floor(Math.random() * 10),
-            "y": Math.floor(xCount/3)+1,
+            "x": 0,
+            "y": 0,
             "size": 1
         }
         xCount++
@@ -61,6 +56,7 @@ function createNodesAndEdges(tree) {
              graph.edges.push(newEdge)
         }
     }
+    calcPositions()
     console.log(graph)
     draw()
 }
@@ -133,8 +129,17 @@ function addEdge(start, end) {
     p.appendChild(c);
 
     draw()
-
     s.refresh()
-    console.log(graph)
 }
 
+function calcPositions() {
+    //Number of Nodes
+    nn = graph.nodes.length
+    //angle for one node
+    alpha = (Math.PI*2)/(nn-1)
+    for(i=1;i<nn;i++) {
+        w=alpha*(i-1)
+        graph.nodes[i].x = Math.cos(w)
+        graph.nodes[i].y = Math.sin(w)
+    }
+}
