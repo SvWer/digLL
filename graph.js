@@ -5,33 +5,14 @@ var graph = {
 var e_id = 0
 //var s = new sigma('container')
 
-/* // Configure the noverlap layout:
-var noverlapListener = s.configNoverlap({
-    nodeMargin: 1,
-    scaleNodes: 1.05,
-    gridSize: 75,
-    easing: 'quadraticInOut', // animation transition function
-    duration: 1000,
-  }); */
-
 var xCount = -1;
-/*
- * -1 / 3 Math.floor()+1 = 0
- * 0 / 3 Math.floor() +1 = 1
- * 1 / 3 Math.floor() +1 = 1
- * 2 / 3 Math.floor() +1 = 1
- * 3 / 3 Math.floor() +1 = 2
- * 4 / 3 Math.floor() +1 = 2
- * 
- * -1%3 +1 = 0
- *  0%3 +1 = 1
- *  1%3 +1 = 2
- *  2%3 +1 = 3
- *  3%3 +1 = 1
- *  4%3 +1 = 2
- */
 
 function createNodesAndEdges(tree) {
+    document.getElementById('container').innerHTML = ""
+    graph = {
+        "nodes": [],
+        "edges": []
+    }
     //For every Question create a Node
     for(i=0; i< tree.length; i++) {
         //newNode = node
@@ -73,6 +54,15 @@ function draw() {
     s.refresh()
 }
 
+function newGraph() {
+    var g = document.getElementById('container');
+    var p = g.parentNode;
+    p.removeChild(g);
+    var c = document.createElement('div');
+    c.setAttribute('id', 'container');
+    p.appendChild(c);
+}
+
 function changeEdge(start, old, end, wahl) {
     var w = 0
     try {
@@ -95,16 +85,8 @@ function changeEdge(start, old, end, wahl) {
     } catch (e) {
         console.log("Exception thrown")
     }
-
-    var g = document.getElementById('container');
-    var p = g.parentNode;
-    p.removeChild(g);
-    var c = document.createElement('div');
-    c.setAttribute('id', 'container');
-    p.appendChild(c);
-
+    newGraph()
     draw()
-
     s.refresh()
     console.log(graph)
 }
@@ -120,14 +102,7 @@ function addEdge(start, end) {
     }
     console.log(s)
      graph.edges.push(newEdge)
-
-    var g = document.getElementById('container');
-    var p = g.parentNode;
-    p.removeChild(g);
-    var c = document.createElement('div');
-    c.setAttribute('id', 'container');
-    p.appendChild(c);
-
+    newGraph()
     draw()
     s.refresh()
 }
