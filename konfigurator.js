@@ -79,6 +79,7 @@ function addAnswer( ) {
     s += "Antwort:      <br>  <textarea id='antwort"+"' name='antwort"+"' class='ant'></textarea><br>"
     s += "Nächste Frage: <br> "+dropdown(0) + "<br>"
     s += "Feedback:     <br> <textarea id='feedq"+"' name='feedq"+"' class='feed'></textarea><br>"
+    s += "<button onclick='deleteAnswer(-1, this)'> Diese Antwort löschen </button>"
     s += "</div>"
     s += "<hr>"
     feld.innerHTML += s
@@ -134,6 +135,7 @@ function next() {
         var allFields = "<h3>Frage: " + q.id+ "</h3>"
         allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
         allFields += "Fragentyp: " + createType(q['type']) + "<br>"
+        allFields += "<button onclick='deleteQuestion()'>Diese Frage löschen</button><br>"
         allFields += "<hr>"
         allFields += "<h3>Antworten: </h3><br>"
         allFields += "<div id='answers'>"
@@ -143,6 +145,7 @@ function next() {
             //allFields += "Nächste Frage: <textarea id='nextq"+i+"' name='nextq"+i+"' class='ne'>" +  q['antworten'][i]['next'] + "</textarea><br>"
             allFields += "Nächste Frage: <br> "+dropdown(q['antworten'][i]['next']) + "<br>"
             allFields += "Feedback:   <br>   <textarea id='feedq"+i+"' name='feedq"+i+"' class='feed'>" +  q['antworten'][i]['feedback'] + "</textarea><br>"
+            allFields += "<button onclick='deleteAnswer("+i+", this)'> Diese Antwort löschen </button> <br>"
             allFields += "</div>"
             allFields += "<hr>"
         }
@@ -210,7 +213,48 @@ function save(k) {
     
 }
 
+function deleteAnswer(choice, but) {
+    if (choice == -1) {
+        console.log(but)
+        p = but.parentNode
+        pp = p.parentNode
+        pp.removeChild(p)
+    } else {
+        q = jsondoc[jsonindex]
+        q.antworten.splice(choice, 1)
+        for (i=0; i< q.antworten.length; i++) {
+            q.antworten.wahl = i
+        }
+        jsonindex -= 1
+        newGraph()
+        createNodesAndEdges(jsondoc)
+        next()
+    }
+}
 
+function deleteQuestion() {
+    p = prompt("Wollen Sie diese Frage wirklich löschen? \n Alle Referenzen auf diese Frage werden dann zu Frage 0 geändert, was beim ausführen zu einem Beenden des Fragebogens führt.\n Schreiben Sie 'ja', wenn Sie die Frage wirklich löschen wollen.")
+    if(p == "ja") {
+        jsondoc.splice(jsonindex,1)
+        //Für jede Frage
+        for (f=0; f < jsondoc.length; f++) {
+            //Für jede Antwort
+            for(a=0; a< jsondoc[f].antworten.length; a++) {
+                if (jsondoc[f].antworten[a].next == jsonindex) {
+                    jsondoc[f].antworten[a].next = 0
+                }
+            }
+
+        }
+        //Graph neu berechnen und nächste Frage Anzeigen
+        delete dict[jsonindex]
+        newGraph()
+        createNodesAndEdges(jsondoc)
+        jsonindex -= 1
+        next()
+    }
+    //Was ist mit den Referenzen??
+}
 
 
 
@@ -247,6 +291,7 @@ function create(alt) {
         allFields += "Antwort:   <br>    <textarea id='antwort"+0+"' name='antwort"+0+"' class='ant'>"+sampleA.text +"</textarea><br>"
         allFields += "Nächste Frage: <br>  "+dropdown(0) + "<br>"
         allFields += "Feedback:   <br>   <textarea id='feedq"+0+"' name='feedq"+0+"' class='feed'>"+sampleA.feedback  + "</textarea><br>"
+        allFields += "<button onclick='deleteAnswer(-1, this)'> Diese Antwort löschen </button> <br>"
         allFields += "</div>"
         allFields += "<hr>"
         

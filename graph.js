@@ -17,8 +17,8 @@ function createNodesAndEdges(tree) {
     for(i=0; i< tree.length; i++) {
         //newNode = node
         var newNode = {
-            "id": "n"+(i),
-            "label": "Frage " + (i),
+            "id": "n"+tree[i].id,
+            "label": "Frage " + tree[i].id,
             "x": 0,
             "y": 0,
             "size": 1
@@ -30,7 +30,7 @@ function createNodesAndEdges(tree) {
              //newEdge = edge
              var newEdge = {
                 "id": "e"+ e_id++,
-                "source": "n"+i,
+                "source": "n"+tree[i].id,
                 "target":"n"+tree[i].antworten[j].next,
                 "type": "arrow"
             }
@@ -48,7 +48,7 @@ function draw() {
         container: 'container',
         settings: {
             defaultNodeColor: '#ec5148',
-            arrowSizeRatio: 5,
+            arrowSizeRatio: 15,
         }
     });
     s.refresh()
@@ -61,6 +61,8 @@ function newGraph() {
     var c = document.createElement('div');
     c.setAttribute('id', 'container');
     p.appendChild(c);
+    e_id = 0
+    xCount = -1
 }
 
 function changeEdge(start, old, end, wahl) {
