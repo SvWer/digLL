@@ -4,11 +4,104 @@ var graph = {
 }
 var e_id = 0
 //var s = new sigma('container')
+var can
+var ctx
+var event = new MouseEvent('mousemove', {});
+var activeID = 0
 
-var xCount = -1;
+/*
+    Get Canvas element, create Context and add eventlistener for move and click
+*/
+function prepCanvas() {
+    can = document.getElementById("testcanvas")
+    ctx = can.getContext("2d")
+
+    can.onmousemove = function(e) {
+        var rect = this.getBoundingClientRect(),
+        x = e.clientX - rect.left,
+        y = e.clientY - rect.top,
+        i = 0, r;
+
+        ctx.clearRect(0, 0, can.width, can.height); // for demo
+         while(r = graph.nodes[i++]){
+            // add a single rect to path:
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, 10, 0, 2*Math.PI)  
+            
+            // check if we hover it, fill red, if not fill it blue
+            if(ctx.isPointInPath(x, y)) {
+                ctx.fillStyle = "blue"
+                ctx.fillText("ID: "+r.id+" "+r.text, 20, 15)
+            } else {
+                ctx.fillStyle = r.color
+            }
+            ctx.fill();
+          }
+          for(j=0; j < graph.edges.length; j++) {
+            drawLineWithArrows(graph.nodes[graph.edges[j].source].x, graph.nodes[graph.edges[j].source].y, graph.nodes[graph.edges[j].target].x, graph.nodes[graph.edges[j].target].y, 5, 8, false,true)
+        }
+    }
+
+    can.onclick = function(e) {
+        var rect = this.getBoundingClientRect(),
+        x = e.clientX - rect.left,
+        y = e.clientY - rect.top,
+        i = 0, r;
+
+        ctx.clearRect(0, 0, can.width, can.height); // for demo
+        while(r = graph.nodes[i++]) {
+            // add a single rect to path:
+            ctx.beginPath(); 
+            ctx.arc(r.x, r.y, 10, 0, 2*Math.PI)  
+            ctx.fillStyle = r.color
+            // check if we hover it, fill red, if not fill it blue
+            if(ctx.isPointInPath(x, y)) {
+                console.log(r.label)
+                jsonindex = r.id-1
+                next()
+            } else {
+            }
+            ctx.fill();
+          }
+          for(j=0; j < graph.edges.length; j++) {
+              drawLineWithArrows(graph.nodes[graph.edges[j].source].x, graph.nodes[graph.edges[j].source].y, graph.nodes[graph.edges[j].target].x, graph.nodes[graph.edges[j].target].y, 5, 8, false,true)
+        }
+    }
+}
+
+function drawLineWithArrows(x0,y0,x1,y1,aWidth,aLength,arrowStart,arrowEnd){
+    var dx=x1-x0;
+    var dy=y1-y0;
+    var angle=Math.atan2(dy,dx);
+    var length=Math.sqrt(dx*dx+dy*dy);
+    //
+    ctx.translate(x0,y0);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(length,0);
+    if(arrowStart){
+        ctx.moveTo(aLength,-aWidth);
+        ctx.lineTo(0,0);
+        ctx.lineTo(aLength,aWidth);
+    }
+    if(arrowEnd){
+        ctx.moveTo(length-aLength,-aWidth);
+        ctx.lineTo(length,0);
+        ctx.lineTo(length-aLength,aWidth);
+    }
+    //
+    ctx.stroke();
+    ctx.setTransform(1,0,0,1,0,0);
+}
+
 
 function createNodesAndEdges(tree) {
-    document.getElementById('container').innerHTML = ""
+    c = document.getElementById("testcanvas")
+    co = document.getElementById('container')
+    co.innerHTML = ""
+    co.appendChild(c)
+    prepCanvas()
     graph = {
         "nodes": [],
         "edges": []
@@ -17,98 +110,77 @@ function createNodesAndEdges(tree) {
     for(i=0; i< tree.length; i++) {
         //newNode = node
         var newNode = {
-            "id": "n"+tree[i].id,
+            "id": tree[i].id,
             "label": "Frage " + tree[i].id,
-            "x": 0,
-            "y": 0,
+            "text": tree[i].text,
+            "color": "red",
+            "x": 250,
+            "y": 250,
             "size": 1
         }
-        xCount++
+        if(tree[i].id == activeID) {
+            newNode.color = "green"
+        }
         graph.nodes.push(newNode)
         //For every Answer create an Edge
         for(j=0; j< tree[i].antworten.length; j++) {
              //newEdge = edge
              var newEdge = {
                 "id": "e"+ e_id++,
-                "source": "n"+tree[i].id,
-                "target":"n"+tree[i].antworten[j].next,
-                "type": "arrow"
+                "source": tree[i].id,
+                "target":tree[i].antworten[j].next
             }
              graph.edges.push(newEdge)
         }
     }
     calcPositions()
-    console.log(graph)
+    console.log("Test: ",graph)
     draw()
 }
 
 function draw() {
-    s = new sigma({ 
-        graph: graph,
-        container: 'container',
-        settings: {
-            defaultNodeColor: '#ec5148',
-            arrowSizeRatio: 15,
-        }
-    });
-    s.refresh()
+    !can.dispatchEvent(event);
 }
 
-function newGraph() {
-    var g = document.getElementById('container');
-    var p = g.parentNode;
-    p.removeChild(g);
-    var c = document.createElement('div');
-    c.setAttribute('id', 'container');
-    p.appendChild(c);
-    e_id = 0
-    xCount = -1
-}
 
 function changeEdge(start, old, end, wahl) {
     var w = 0
-    try {
-        graph.edges.forEach((edge) => {
-            console.log(w)
-            if(edge.source == ("n"+start) && edge.target == ("n"+old)) {
-                if (w == wahl){
-                    console.log("detected")
-                    console.log(edge.target)
-                    console.log("n"+end)
-                    edge.target = "n"+end
-                    console.log(edge.target)
-                    throw BreakException
-                } else {
-                    w++
-                }
+    for(m=0; m < graph.edges.length; m++) {
+        console.log(w)
+        if(graph.edges[m].source == (start) && graph.edges[m].target == (old)) {
+            if (w == wahl){
+                console.log("detected")
+                graph.edges[m].target = end
+                m = graph.edges.length
+            } else {
+                w++
             }
-            
-        })
-    } catch (e) {
-        console.log("Exception thrown")
+        }
+        
     }
-    newGraph()
     draw()
-    s.refresh()
     console.log(graph)
 }
 
+/*
+    adds new edge to the graph an redraws the graph
+*/
 function addEdge(start, end) {
-    console.log("n"+start)
-    console.log("n"+end)
+    console.log(start)
+    console.log(end)
     var newEdge = {
-        "id": "e"+ e_id++,
-        "source": "n"+start,
-        "target":"n"+end,
-        "type": "arrow"
+        "id": e_id++,
+        "source": start,
+        "target": end
     }
     console.log(s)
-     graph.edges.push(newEdge)
-    newGraph()
+    graph.edges.push(newEdge)
     draw()
-    s.refresh()
 }
 
+/*
+    Calculates the positions of the nodes in a circle
+*/
 function calcPositions() {
     //Number of Nodes
     nn = graph.nodes.length
@@ -116,7 +188,7 @@ function calcPositions() {
     alpha = (Math.PI*2)/(nn-1)
     for(i=1;i<nn;i++) {
         w=alpha*(i-1)
-        graph.nodes[i].x = Math.cos(w)
-        graph.nodes[i].y = Math.sin(w)
+        graph.nodes[i].x = Math.cos(w) * 200 + 250
+        graph.nodes[i].y = Math.sin(w) * 200 + 250
     }
 }

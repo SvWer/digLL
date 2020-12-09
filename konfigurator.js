@@ -15,6 +15,7 @@ var fragentyp = {
 window.onload = function() {
     console.log("Seite geladen")
     cont = document.getElementById("text")
+    prepCanvas()
 }
 
 /*
@@ -32,14 +33,6 @@ function starten() {
     }
     e_id = 0
     xCount = -1
-    newGraph()
-
-    // console.log("Startseite")
-    // s = "<p id='einleitung'>Herzlich willkommen beim digLL Konfigurator. Mit Hilfe dieses Konfigurators ist es möglich den Fragebogen zu Konfigurieren. Dazu kann entweder eine bestehende Vorlage bearbeitet werden oder es kann ein komplett neuer Fragebogen erstellt werden (Kommt erst später ;) )</p>"
-    // s += "<p id='anweisung'>    Was möchten Sie tun?</p>"
-    // s += "<button onclick='create()'>Einen Fragebogen erstellen</button>"
-    // s += "<button onclick='modify()'>Einen Fragebogen bearbeiten</button>"
-    // cont.innerHTML = s
     location.reload();
 }
 
@@ -128,9 +121,15 @@ function createType(number) {
     If all Questions have been loaded, JSON-String will be generated to copy
 */
 function next() {
+    //change active id
+    
     jsonindex += 1
     if(jsonindex < jsondoc.length)
     {
+        graph.nodes[activeID].color = "red"
+        activeID = jsondoc[jsonindex].id
+        graph.nodes[activeID].color = "green"
+        draw()
         q = jsondoc[jsonindex]
         var allFields = "<h3>Frage: " + q.id+ "</h3>"
         allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
@@ -150,10 +149,13 @@ function next() {
             allFields += "<hr>"
         }
         allFields += "</div>"
-        allFields += "<button onclick='addAnswer()'>Neue Antwort hinzufügen</button><br>"   //Funktioniert
-        allFields += "<button onclick='save(1)' id='weiter'>Weiter</button><br>"            //Funktioniert
-        allFields += "<button onclick='save(0)' id='zurueck'>Zurück</button><br>"           //Funktioniert
+        allFields += "<div id='organize'>"
+        allFields += "<button onclick='save(1)' id='weiter' class='inline'>Weiter</button>"            //Funktioniert
+        allFields += "<button onclick='addAnswer()' id='neueF' class='inline'>Neue Antwort hinzufügen</button>"   //Funktioniert
+        allFields += "<button onclick='save(0)' id='zurueck' class='inline'>Zurück</button><br><br>"           //Funktioniert
         allFields += "<button onclick='create(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert nicht richtig
+        allFields += "<button onclick='end()' id='end'>Fragebogen beenden</button>"
+        allFields += "</div>"
         cont.innerHTML = allFields
     } else {
         var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
@@ -184,6 +186,11 @@ function save(k) {
     for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
         changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
+        console.log("Edge successfully changed")
+        console.log("i:", i)
+        console.log(nextref)
+        console.log(nextref[i])
+        console.log(nextref[i].selectedIndex)
         jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
         jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value     
     }
@@ -226,7 +233,6 @@ function deleteAnswer(choice, but) {
             q.antworten.wahl = i
         }
         jsonindex -= 1
-        newGraph()
         createNodesAndEdges(jsondoc)
         next()
     }
@@ -248,7 +254,6 @@ function deleteQuestion() {
         }
         //Graph neu berechnen und nächste Frage Anzeigen
         delete dict[jsonindex]
-        newGraph()
         createNodesAndEdges(jsondoc)
         jsonindex -= 1
         next()
@@ -256,6 +261,13 @@ function deleteQuestion() {
     //Was ist mit den Referenzen??
 }
 
+function end() {
+    save()
+    var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
+        allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
+        allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
+        cont.innerHTML = allFields
+}
 
 
 
@@ -332,7 +344,6 @@ function append(n) {
     }
     jsondoc.push(q)
     console.log(jsondoc)
-    newGraph()
     createNodesAndEdges(jsondoc)
     
     console.log("n: ", n)

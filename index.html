@@ -10,33 +10,30 @@
     </head>
     <body>
         <div id='content'>
-        <img src="digLL_Logo.png" id="logo" onclick="starten()">
-        <h1>digLL Konfigurator</h1>
-        <div id="text">
-            <p id="einleitung">
-                <h3>Herzlich willkommen beim digLL Konfigurator.</h3> <br>
-                Mit Hilfe dieses Konfigurators ist es möglich einen Fragebogen für die interaktive Hilfe für wissenschaftliches Arbeiten zu Konfigurieren. <br><br>
-                Mit der interaktiven Hilfe für wissenschaftliches Arbeiten sollen erste Informationen über Kenntnisse und Interessen der Studenten gewonnen werden,
-                die ein Interesse haben bei einem selbst ihre Abschlussarbeit zu schreiben.<br><br>
-                Zum Erstellen eines Fragebogens kann dieser Konfigurator genutzt werden. Dazu kann entweder eine bestehende Vorlage (JSON) bearbeitet werden 
-                oder es kann ein komplett neuer Fragebogen erstellt werden.
-            </p>
-            <p id="anweisung">
-                Was möchten Sie tun?
-            </p>
-       
-            <button onclick="create()">Einen Fragebogen erstellen</button>
-            <button onclick="modify()">Einen Fragebogen bearbeiten</button>
+            <img src="digLL_Logo.png" id="logo" onclick="starten()">
+            <h1>digLL Konfigurator</h1>
+            <div id="text">
+                <p id="einleitung">
+                    <h3>Herzlich willkommen beim digLL Konfigurator.</h3> <br>
+                    Mit Hilfe dieses Konfigurators ist es möglich einen Fragebogen für die interaktive Hilfe für wissenschaftliches Arbeiten zu Konfigurieren. <br><br>
+                    Mit der interaktiven Hilfe für wissenschaftliches Arbeiten sollen erste Informationen über Kenntnisse und Interessen der Studenten gewonnen werden,
+                    die ein Interesse haben bei einem selbst ihre Abschlussarbeit zu schreiben.<br><br>
+                    Zum Erstellen eines Fragebogens kann dieser Konfigurator genutzt werden. Dazu kann entweder eine bestehende Vorlage (JSON) bearbeitet werden 
+                    oder es kann ein komplett neuer Fragebogen erstellt werden.
+                </p>
+                <p id="anweisung">
+                    Was möchten Sie tun?
+                </p>
+        
+                <button onclick="create()">Einen Fragebogen erstellen</button>
+                <button onclick="modify()">Einen Fragebogen bearbeiten</button>
+            </div>
+            <div id="container">
+                <p>An dieser Stelle wird Ihr Fragebogen als Graph sichtbar sein.</p>
+                <img src="dummy.png" id="dummy">
+                <canvas id='testcanvas'width="500" height="500"></canvas>
+            </div>
         </div>
-        <div id="container">
-            <p>An dieser Stelle wird Ihr Fragebogen als Graph sichtbar sein.</p>
-            <img src="dummy.png" id="dummy">
-        </div>
-    </div>
-        <script src="sigma.min.js"></script>
-        <script src="sigma.parsers.json.min.js"></script>
-        <script src="sigma.layout.noverlap.min.js"></script>
-        <script src="sigma.plugins.animate.min.js"></script>
         <script src="konfigurator.js"></script>
         <script src="graph.js"></script>
      </body>
