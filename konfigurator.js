@@ -150,10 +150,10 @@ function next() {
         }
         allFields += "</div>"
         allFields += "<div id='organize'>"
-        allFields += "<button onclick='save(1)' id='weiter' class='inline'>Weiter</button>"            //Funktioniert
+        allFields += "<button onclick='save(0)' id='zurueck' class='inline'>Zurück</button>"           //Funktioniert
         allFields += "<button onclick='addAnswer()' id='neueF' class='inline'>Neue Antwort hinzufügen</button>"   //Funktioniert
-        allFields += "<button onclick='save(0)' id='zurueck' class='inline'>Zurück</button><br><br>"           //Funktioniert
-        allFields += "<button onclick='create(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert nicht richtig
+        allFields += "<button onclick='save(1)' id='weiter' class='inline'>Weiter</button><br><br>"            //Funktioniert
+        allFields += "<button onclick='create(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
         allFields += "<button onclick='end()' id='end'>Fragebogen beenden</button>"
         allFields += "</div>"
         cont.innerHTML = allFields
@@ -186,11 +186,11 @@ function save(k) {
     for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
         changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
-        console.log("Edge successfully changed")
-        console.log("i:", i)
-        console.log(nextref)
-        console.log(nextref[i])
-        console.log(nextref[i].selectedIndex)
+        // console.log("Edge successfully changed")
+        // console.log("i:", i)
+        // console.log(nextref)
+        // console.log(nextref[i])
+        // console.log(nextref[i].selectedIndex)
         jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
         jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value     
     }
@@ -214,6 +214,20 @@ function save(k) {
         } else {
             alert("Das ist bereits die erste Frage!")
             jsonindex -= 1
+        }
+    }
+    console.log("Index: ", jsonindex)
+    if(jsonindex == jsondoc.length-1) {
+        console.log("Ende")
+        pr = prompt("Dies war die letze Frage. Geben Sie 'weiter' ein, um eine neue Frage zum Fragebogen hinzuzufügen oder geben Sie 'stop' ein, wenn Sie den Fragebogen beenden möchten.")
+        if(pr == "weiter") {
+            console.log("Weiter")
+            create(0)
+            return
+        } else if (pr == "stop") {
+            console.log("Stop")
+            end(9)
+            return
         }
     }
     next()
@@ -261,8 +275,14 @@ function deleteQuestion() {
     //Was ist mit den Referenzen??
 }
 
-function end() {
-    save()
+function end(t = 0) {
+    if(t == 0) {
+        save()
+    } else if (t = 9) {
+
+    }else {
+        append(0)
+    }
     var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
         allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
         allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
@@ -283,12 +303,13 @@ sampleQ = {
 }
 sampleA = {
     "wahl": 0,
-    "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein",
+    "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein. Über den Button 'Neue Antwort hinzufügen' können weitere Antworten hinzugefügt werden",
     "next": 5,
     "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
     }
 
 function create(alt) {
+    console.log("Create")
     if(alt == 0) {
         newCount = Object.keys(dict).length
         dict[newCount] = "Diese Frage"
@@ -308,9 +329,13 @@ function create(alt) {
         allFields += "<hr>"
         
         allFields += "</div>"
-        allFields += "<button onclick='addAnswer()'>Neue Antwort hinzufügen</button><br>" //Funktioniert
-        allFields += "<button onclick='append(0)' id='weiter'>Weiter</button><br>"        //
-        allFields += "<button onclick='append(1)' id='zurueck'>Zurück</button><br>"       //Funktioniert
+        allFields += "<div id='organize'>"
+        allFields += "<button onclick='append(1)' id='zurueck' class='inline'>Zurück</button>"       //Funktioniert
+        allFields += "<button onclick='addAnswer()' class='inline'>Neue Antwort hinzufügen</button>" //Funktioniert
+        allFields += "<button onclick='append(0)' id='weiter' class='inline'>Weiter</button><br>"        //
+        allFields += "<button onclick='append(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
+        allFields += "<button onclick='end(1)' id='end'>Fragebogen beenden</button>"
+        allFields += "</div>"
         cont.innerHTML = allFields
 }
 

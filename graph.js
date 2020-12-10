@@ -31,7 +31,14 @@ function prepCanvas() {
             // check if we hover it, fill red, if not fill it blue
             if(ctx.isPointInPath(x, y)) {
                 ctx.fillStyle = "blue"
-                ctx.fillText("ID: "+r.id+" "+r.text, 20, 15)
+                ctx.font = "20px Arial";
+                lines = fragmentText("Frage: "+ r.id + " "+ r.text, can.width-20)
+                console.log(lines)
+                for(k = 0; k < lines.length; k++) {
+                    console.log(lines[k])
+                    ctx.fillText(lines[k], 20, 25*(k+1))
+                }
+                //ctx.fillText("Frage: "+r.id+" "+r.text, 20, 25)
             } else {
                 ctx.fillStyle = r.color
             }
@@ -69,6 +76,39 @@ function prepCanvas() {
     }
 }
 
+function fragmentText(text, maxWidth) {
+    var lines = [],
+        words = text.replace(/\n\n/g,' ` ').replace(/(\n\s|\s\n)/g,'\r')
+        .replace(/\s\s/g,' ').replace('`',' ').replace(/(\r|\n)/g,' '+' ').split(' '),
+        space = ctx.measureText(' ').width,
+        width = 0,
+        line = '',
+        word = '',
+        len = words.length,
+        w = 0,
+        i;
+    for (i = 0; i < len; i++) {
+        word = words[i];
+        w = word ? ctx.measureText(word).width : 0;
+        if (w) {
+            width = width + space + w;
+        }
+        if (w > maxWidth) {
+            return [];
+        } else if (w && width < maxWidth) {
+            line += (i ? ' ' : '') + word;
+        } else {
+            !i || lines.push(line !== '' ? line.trim() : '');
+            line = word;
+            width = w;
+        }
+    }
+    if (len !== i || line !== '') {
+        lines.push(line);
+    }
+    return lines;
+}
+
 function drawLineWithArrows(x0,y0,x1,y1,aWidth,aLength,arrowStart,arrowEnd){
     var dx=x1-x0;
     var dy=y1-y0;
@@ -99,7 +139,14 @@ function drawLineWithArrows(x0,y0,x1,y1,aWidth,aLength,arrowStart,arrowEnd){
 function createNodesAndEdges(tree) {
     c = document.getElementById("testcanvas")
     co = document.getElementById('container')
+    e = document.getElementById("erlaut")
+    e.innerHTML = "Hier sind Ihr Fragen als Graph dargestellt. Jeder Punkt steht für eine Frage, jeder Pfeil für eine Antwort zu einer anderen Frage.<br><br>"
+    e.innerHTML += "Grün stellt die aktuelle Frage dar<br>"
+    e.innerHTML += "Rot sind gerade nicht aktive Fragen <br>"
+    e.innerHTML += "Blau sind Fragen, wenn Sie mit der Maus über den Punkt gehen<br>"
+    e.innerHTML += "Bei einem Klick auf einen Punkt wird die entsprechende Frage links angezeigt<br>"
     co.innerHTML = ""
+    co.appendChild(e)
     co.appendChild(c)
     prepCanvas()
     graph = {
@@ -115,7 +162,7 @@ function createNodesAndEdges(tree) {
             "text": tree[i].text,
             "color": "red",
             "x": 250,
-            "y": 250,
+            "y": 290,
             "size": 1
         }
         if(tree[i].id == activeID) {
@@ -189,6 +236,6 @@ function calcPositions() {
     for(i=1;i<nn;i++) {
         w=alpha*(i-1)
         graph.nodes[i].x = Math.cos(w) * 200 + 250
-        graph.nodes[i].y = Math.sin(w) * 200 + 250
+        graph.nodes[i].y = Math.sin(w) * 200 + 290
     }
 }
