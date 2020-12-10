@@ -1,6 +1,7 @@
 body {
-    background-color: rgb(170, 167, 167);
+    background-color: rgb(212, 211, 211);
     padding: 20px;
+    font-size: larger;
 }
 
 input {
@@ -92,7 +93,7 @@ button:hover {
 
 .ant {
     width: 400px;
-    height: 70px;
+    height: 110px;
 }
 
 .ne {

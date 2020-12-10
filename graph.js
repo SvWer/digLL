@@ -30,12 +30,10 @@ function prepCanvas() {
             
             // check if we hover it, fill red, if not fill it blue
             if(ctx.isPointInPath(x, y)) {
-                ctx.fillStyle = "blue"
+                ctx.fillStyle = "#004896"
                 ctx.font = "20px Arial";
                 lines = fragmentText("Frage: "+ r.id + " "+ r.text, can.width-20)
-                console.log(lines)
                 for(k = 0; k < lines.length; k++) {
-                    console.log(lines[k])
                     ctx.fillText(lines[k], 20, 25*(k+1))
                 }
                 //ctx.fillText("Frage: "+r.id+" "+r.text, 20, 25)
@@ -63,7 +61,6 @@ function prepCanvas() {
             ctx.fillStyle = r.color
             // check if we hover it, fill red, if not fill it blue
             if(ctx.isPointInPath(x, y)) {
-                console.log(r.label)
                 jsonindex = r.id-1
                 next()
             } else {
@@ -160,13 +157,13 @@ function createNodesAndEdges(tree) {
             "id": tree[i].id,
             "label": "Frage " + tree[i].id,
             "text": tree[i].text,
-            "color": "red",
+            "color": "#A34D16",
             "x": 250,
             "y": 290,
             "size": 1
         }
         if(tree[i].id == activeID) {
-            newNode.color = "green"
+            newNode.color = "#F0CA0C"
         }
         graph.nodes.push(newNode)
         //For every Answer create an Edge
@@ -181,7 +178,6 @@ function createNodesAndEdges(tree) {
         }
     }
     calcPositions()
-    console.log("Test: ",graph)
     draw()
 }
 
@@ -193,10 +189,8 @@ function draw() {
 function changeEdge(start, old, end, wahl) {
     var w = 0
     for(m=0; m < graph.edges.length; m++) {
-        console.log(w)
         if(graph.edges[m].source == (start) && graph.edges[m].target == (old)) {
             if (w == wahl){
-                console.log("detected")
                 graph.edges[m].target = end
                 m = graph.edges.length
             } else {
@@ -206,21 +200,17 @@ function changeEdge(start, old, end, wahl) {
         
     }
     draw()
-    console.log(graph)
 }
 
 /*
     adds new edge to the graph an redraws the graph
 */
 function addEdge(start, end) {
-    console.log(start)
-    console.log(end)
     var newEdge = {
         "id": e_id++,
         "source": start,
         "target": end
     }
-    console.log(s)
     graph.edges.push(newEdge)
     draw()
 }

@@ -13,7 +13,6 @@ var fragentyp = {
     Function that gets the text div, in which everything happens
 */
 window.onload = function() {
-    console.log("Seite geladen")
     cont = document.getElementById("text")
     prepCanvas()
 }
@@ -51,7 +50,6 @@ function modify() {
     If you Insert the Json, this function creates a JSON-Object and a dictionary of all questions and calls function to load first question
 */
 function applyJson () {
-    console.log("Apply JSON")
     ta = document.getElementById("jsontext").value 
     jsondoc = JSON.parse(ta)
     //create dictionary with indices and question text for dropdowns
@@ -169,7 +167,6 @@ function next() {
     This funktion saves all fields for this question
 */
 function save(k) {
-    console.log("Check if Changes and Save in Object")
     fr = document.getElementById("frage").value
     jsondoc[jsonindex]['text'] = fr
     frt = document.getElementById('ftype').value
@@ -179,24 +176,14 @@ function save(k) {
     nextref = document.getElementsByClassName('ne')
     feeds = document.getElementsByClassName('feed')
 
-    console.log("Antworten: "+ antworten.length)
-    console.log("Next Refs: "+ nextref.length)
-    console.log("deefbacks: "+ feeds.length)
-
     for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
         changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
-        // console.log("Edge successfully changed")
-        // console.log("i:", i)
-        // console.log(nextref)
-        // console.log(nextref[i])
-        // console.log(nextref[i].selectedIndex)
         jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
         jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value     
     }
     lengthAntworten = jsondoc[jsonindex]['antworten'].length
     newAnswer = antworten.length - lengthAntworten
-    console.log(newAnswer)
     for(i=0; i < newAnswer; i++) {
         s = {
             "wahl" : lengthAntworten+i+1,
@@ -216,16 +203,12 @@ function save(k) {
             jsonindex -= 1
         }
     }
-    console.log("Index: ", jsonindex)
     if(jsonindex == jsondoc.length-1) {
-        console.log("Ende")
         pr = prompt("Dies war die letze Frage. Geben Sie 'weiter' ein, um eine neue Frage zum Fragebogen hinzuzufügen oder geben Sie 'stop' ein, wenn Sie den Fragebogen beenden möchten.")
         if(pr == "weiter") {
-            console.log("Weiter")
             create(0)
             return
         } else if (pr == "stop") {
-            console.log("Stop")
             end(9)
             return
         }
@@ -236,7 +219,6 @@ function save(k) {
 
 function deleteAnswer(choice, but) {
     if (choice == -1) {
-        console.log(but)
         p = but.parentNode
         pp = p.parentNode
         pp.removeChild(p)
@@ -283,6 +265,16 @@ function end(t = 0) {
     }else {
         append(0)
     }
+    zeroCount = 0
+    for(a = 0; a < jsondoc.length; a++) {
+        for(b=0; b < jsondoc[a].antworten.length; b++) {
+            if(jsondoc[a].antworten[b].next == 0) {
+                zeroCount += 1
+            }
+        }
+    }
+    alert("In diesem Fragebogen beenden "+ zeroCount+" Antworten den Fragebogen durch eine Referenz auf die Frage 0.")
+
     var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
         allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
         allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
@@ -309,7 +301,6 @@ sampleA = {
     }
 
 function create(alt) {
-    console.log("Create")
     if(alt == 0) {
         newCount = Object.keys(dict).length
         dict[newCount] = "Diese Frage"
@@ -351,10 +342,7 @@ function append(n) {
         "type": frt,
         "id": newCount
     }
-    console.log("newCount: ", newCount)
     dict[newCount++] = fr
-    console.log(dict)
-    //console.log(newCount)
     antworten = document.getElementsByClassName('ant')
     nextref = document.getElementsByClassName('ne')
     feeds = document.getElementsByClassName('feed')
@@ -368,14 +356,11 @@ function append(n) {
         q.antworten.push(s)
     }
     jsondoc.push(q)
-    console.log(jsondoc)
     createNodesAndEdges(jsondoc)
     
-    console.log("n: ", n)
     if(n == 0) {
         create(0)
     }else {
-        console.log("jsonindex: ", jsonindex)
         if(jsonindex > 0) {
             jsonindex -= 2
         } else {
