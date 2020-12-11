@@ -30,7 +30,8 @@ function prepCanvas() {
             
             // check if we hover it, fill red, if not fill it blue
             if(ctx.isPointInPath(x, y)) {
-                ctx.fillStyle = "#004896"
+                //Hover color
+                ctx.fillStyle = "#2C76CA"
                 ctx.font = "20px Arial";
                 lines = fragmentText("Frage: "+ r.id + " "+ r.text, can.width-20)
                 for(k = 0; k < lines.length; k++) {
@@ -157,13 +158,13 @@ function createNodesAndEdges(tree) {
             "id": tree[i].id,
             "label": "Frage " + tree[i].id,
             "text": tree[i].text,
-            "color": "#A34D16",
+            "color": "#032041",
             "x": 250,
             "y": 290,
             "size": 1
         }
         if(tree[i].id == activeID) {
-            newNode.color = "#F0CA0C"
+            newNode.color = "#475D75"
         }
         graph.nodes.push(newNode)
         //For every Answer create an Edge

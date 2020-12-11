@@ -1,6 +1,11 @@
+:root {
+    --background: #8AB1DC;
+    --dark: #004796;
+}
+
 body {
-    background-color: rgb(212, 211, 211);
-    padding: 20px;
+    background-color: var(--background);
+    /*padding: 20px;*/
     font-size: larger;
 }
 
@@ -9,12 +14,15 @@ input {
 }
 
 #text {
-    width: 45%;
-    float: left;
+    width: 100%;
+    /*float: left;*/
+    left:auto;
+    right:auto;
     min-width: 425px;
-    border: solid 1px #004896;
+    border: solid 1px var(--dark);
     border-radius: 15px;
     padding: 10px;
+    margin-top: 15px;
 }
 
 textarea {
@@ -43,7 +51,7 @@ textarea {
 }
 
 button {
-    border: solid 1px #004896;
+    border: solid 1px var(--dark);
     border-radius: 15px;
     margin: 10px 0px 0px 10px;
     font-size: medium;
@@ -54,26 +62,22 @@ button:hover {
   }
   
 #content {
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
-    /*position: absolute;
-    left: 50%;
-    right: 50%;
-    margin-left: -100px;*/
     margin-left: 10%;
     margin-right: 10%;
+    text-align: center;
 }
 
-#container {
+
+
+#container, #preview {
     height: 750px;
     float: left;
-    width: 49%;
+    width: 46%;
     min-width: 425px;
-    border: solid 1px #004896;
+    border: solid 1px var(--dark);
     border-radius: 15px;
     padding: 15px;
-    margin-left: 10px;
-    /*display: none;*/
+    margin: 5px;
 }
 
 #jsontext {
@@ -87,8 +91,8 @@ button:hover {
 }
 
 #frage {
-    width: 400px;
-    height: 70px;
+    width: 80%px;
+    height: 50px;
 }
 
 .ant {
@@ -120,18 +124,6 @@ button:hover {
     width: 400px;
 }
 
-/*#weiter {
-    float: left;
-}
-
-#zurück {
-    float: right;
-}
-
-#neueF {
-    float: left;
-}*/
-
 .inline {
     margin-left: 5%;
     margin-right: 5%;
@@ -142,7 +134,7 @@ button:hover {
 }
 
 .q {
-    border: solid 1px #004896;
+    border: solid 1px var(--dark);
     border-radius: 15px;
     padding: 15px;
     margin: 10px;
@@ -162,7 +154,64 @@ button:hover {
     height: 500px;
 }
 
-#testcanvas {
-    width: 500px;
-    height: 500px;
+
+
+
+.prevButton {
+    width: 90%;
+    border-radius: 5px;
+    margin: 10px;
 }
+
+.prevSelect {
+    width: 90%;
+    border-radius: 1px;
+    margin: 10px;
+}
+
+.prevCheck {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    border: 2px solid var(--dark);
+    background-color: var(--background);
+}
+
+.prevLabel {
+    width: 90%;
+    margin: 10px;
+}
+
+
+
+
+/* Style the header */
+.header {
+    padding: 10px;
+    background: var(--dark);
+    color: var(--background);
+    font-size: xx-large;
+  }
+  
+  /* Page content */
+  #content {
+    padding: 16px;
+  }
+  
+  /* The sticky class is added to the header with JS when it reaches its scroll position */
+  .sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+  .sticky + #content {
+    padding-top: 102px;
+  }
+
+  #help {
+      float:right;
+      margin-right: 5%;
+  }

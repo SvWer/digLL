@@ -8,7 +8,7 @@ var fragentyp = {
     1: "Checkboxfrage",
     2: "Dropdownfrage"
 }
-
+var newWahlCounter = 0
 /*
     Function that gets the text div, in which everything happens
 */
@@ -47,6 +47,31 @@ function modify() {
 }
 
 /*
+    Erstellt Beispielfrage mit einer Antwort und zeigt diese als neue Frage an
+*/
+function create() {
+    sampleQ = {
+        "text":"Geben Sie hier Ihre Frage ein",
+        "antworten":[],
+        "id": 0
+    }
+    sampleA = {
+        "wahl": newWahlCounter++,
+        "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein. Über den Button 'Neue Antwort hinzufügen' können weitere Antworten hinzugefügt werden",
+        "next": 0,
+        "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
+    }
+    sampleQ.antworten.push(sampleA)
+    jsondoc.push(sampleQ)
+    for(i=0; i <jsondoc.length; i++) {
+        dict[jsondoc[i]['id']] = jsondoc[i]['text']
+    }
+    newCount = dict.length
+    createNodesAndEdges(jsondoc)
+    loadQuestion()
+}
+
+/*
     If you Insert the Json, this function creates a JSON-Object and a dictionary of all questions and calls function to load first question
 */
 function applyJson () {
@@ -61,20 +86,6 @@ function applyJson () {
     next()
 }
 
-/*
-    if you want to add a new answer, this function adds the empty fields
-*/
-function addAnswer( ) {
-    feld = document.getElementById('answers')
-    var s = "<div class='q'>"
-    s += "Antwort:      <br>  <textarea id='antwort"+"' name='antwort"+"' class='ant'></textarea><br>"
-    s += "Nächste Frage: <br> "+dropdown(0) + "<br>"
-    s += "Feedback:     <br> <textarea id='feedq"+"' name='feedq"+"' class='feed'></textarea><br>"
-    s += "<button onclick='deleteAnswer(-1, this)'> Diese Antwort löschen </button>"
-    s += "</div>"
-    s += "<hr>"
-    feld.innerHTML += s
-}
 
 /*
     creates string for dropdown-menu over all possible questions
@@ -115,6 +126,68 @@ function createType(number) {
 }
 
 /*
+    Lade nur die Frage und Zeite diese an
+*/
+function loadQuestion() {
+    jsonindex += 1
+    if(jsonindex < jsondoc.length)
+    {
+        graph.nodes[activeID].color = "#032041"
+        activeID = jsondoc[jsonindex].id
+        graph.nodes[activeID].color = "#475D75"
+        draw()
+        q = jsondoc[jsonindex]
+        showPreview(q.type, q)
+        var allFields = "<h3>Frage: " + q.id+ "</h3>"
+        allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
+        allFields += "Fragentyp: " + createType(q['type']) + "<br>"
+        allFields += "<button onclick='saveQuestion(0)' id='zurueck' class='inline'>Zurück</button>"            // Funktioniert
+        allFields += "<button onclick='deleteQuestion()'>Diese Frage löschen</button>"              // Funktioniert
+        allFields += "<button onclick='saveQuestion(1)' id='weiter' class='inline'>Weiter</button><br>"     //Funktioniert
+        cont.innerHTML = allFields
+    } else {
+        var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
+        allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
+        allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
+        cont.innerHTML = allFields
+    }
+}
+
+/*
+    Saves the informations for the question and goes back to last question or goes on to the answers
+*/
+function saveQuestion(vz) {
+    fr = document.getElementById("frage").value
+    jsondoc[jsonindex]['text'] = fr
+    frt = document.getElementById('ftype').value
+    jsondoc[jsonindex]['type'] = frt
+    if(vz == 1) {
+        answerIndex = 0
+        loadAnswers()
+    } else {
+        //lade vorherige Frage
+        jsonindex -= 2
+        loadQuestion()
+    }
+
+}
+
+var answerIndex = 0
+/*
+    load one answer and shows it
+*/
+function loadAnswers() {
+    q = jsondoc[jsonindex]
+    allFields = "<div class='q'>"
+    allFields += "Antwort:   <br>    <textarea id='antwort"+answerIndex+"' name='antwort"+answerIndex+"' class='ant'>"+ q['antworten'][answerIndex]['text'] +"</textarea><br>"
+    allFields += "Nächste Frage: <br> "+dropdown(q['antworten'][answerIndex]['next']) + "<br>"
+    allFields += "Feedback:   <br>   <textarea id='feedq"+answerIndex+"' name='feedq"+answerIndex+"' class='feed'>" +  q['antworten'][answerIndex]['feedback'] + "</textarea><br>"
+    allFields += "<button onclick='deleteAnswer("+answerIndex+", this)'> Diese Antwort löschen </button> <br>"
+    allFields += "</div>"
+    cont.innerHTML = allFields
+}
+
+/*
     Loads next question and shows all important infromation of this question
     If all Questions have been loaded, JSON-String will be generated to copy
 */
@@ -124,11 +197,12 @@ function next() {
     jsonindex += 1
     if(jsonindex < jsondoc.length)
     {
-        graph.nodes[activeID].color = "red"
+        graph.nodes[activeID].color = "#032041"
         activeID = jsondoc[jsonindex].id
-        graph.nodes[activeID].color = "green"
+        graph.nodes[activeID].color = "#475D75"
         draw()
         q = jsondoc[jsonindex]
+        showPreview(q.type, q)
         var allFields = "<h3>Frage: " + q.id+ "</h3>"
         allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
         allFields += "Fragentyp: " + createType(q['type']) + "<br>"
@@ -151,7 +225,7 @@ function next() {
         allFields += "<button onclick='save(0)' id='zurueck' class='inline'>Zurück</button>"           //Funktioniert
         allFields += "<button onclick='addAnswer()' id='neueF' class='inline'>Neue Antwort hinzufügen</button>"   //Funktioniert
         allFields += "<button onclick='save(1)' id='weiter' class='inline'>Weiter</button><br><br>"            //Funktioniert
-        allFields += "<button onclick='create(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
+        allFields += "<button onclick='createAlt(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
         allFields += "<button onclick='end()' id='end'>Fragebogen beenden</button>"
         allFields += "</div>"
         cont.innerHTML = allFields
@@ -206,7 +280,7 @@ function save(k) {
     if(jsonindex == jsondoc.length-1) {
         pr = prompt("Dies war die letze Frage. Geben Sie 'weiter' ein, um eine neue Frage zum Fragebogen hinzuzufügen oder geben Sie 'stop' ein, wenn Sie den Fragebogen beenden möchten.")
         if(pr == "weiter") {
-            create(0)
+            createAlt(0)
             return
         } else if (pr == "stop") {
             end(9)
@@ -281,7 +355,20 @@ function end(t = 0) {
         cont.innerHTML = allFields
 }
 
-
+/*
+    if you want to add a new answer, this function adds the empty fields
+*/
+function addAnswer( ) {
+    feld = document.getElementById('answers')
+    var s = "<div class='q'>"
+    s += "Antwort:      <br>  <textarea id='antwort"+"' name='antwort"+"' class='ant'></textarea><br>"
+    s += "Nächste Frage: <br> "+dropdown(0) + "<br>"
+    s += "Feedback:     <br> <textarea id='feedq"+"' name='feedq"+"' class='feed'></textarea><br>"
+    s += "<button onclick='deleteAnswer(-1, this)'> Diese Antwort löschen </button>"
+    s += "</div>"
+    s += "<hr>"
+    feld.innerHTML += s
+}
 
 
 /*
@@ -300,7 +387,7 @@ sampleA = {
     "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
     }
 
-function create(alt) {
+function createAlt(alt) {
     if(alt == 0) {
         newCount = Object.keys(dict).length
         dict[newCount] = "Diese Frage"
@@ -359,7 +446,7 @@ function append(n) {
     createNodesAndEdges(jsondoc)
     
     if(n == 0) {
-        create(0)
+        createAlt(0)
     }else {
         if(jsonindex > 0) {
             jsonindex -= 2
@@ -372,3 +459,22 @@ function append(n) {
 
 }
 
+
+
+
+
+
+
+/*
+    Hier wird der sticky header definiert
+*/
+window.onscroll = function() {myFunction()};
+var header = document.getElementById("myHeader");
+var sticky = header.offsetTop;
+function myFunction() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
