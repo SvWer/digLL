@@ -63,6 +63,7 @@ function create() {
     }
     sampleQ.antworten.push(sampleA)
     jsondoc.push(sampleQ)
+    console.log(jsondoc)
     for(i=0; i <jsondoc.length; i++) {
         dict[jsondoc[i]['id']] = jsondoc[i]['text']
     }
@@ -132,18 +133,14 @@ function loadQuestion() {
     jsonindex += 1
     if(jsonindex < jsondoc.length)
     {
+        console.log(jsonindex)
         graph.nodes[activeID].color = "#032041"
         activeID = jsondoc[jsonindex].id
         graph.nodes[activeID].color = "#475D75"
         draw()
         q = jsondoc[jsonindex]
         showPreview(q.type, q)
-        var allFields = "<h3>Frage: " + q.id+ "</h3>"
-        allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
-        allFields += "Fragentyp: " + createType(q['type']) + "<br>"
-        allFields += "<button onclick='saveQuestion(0)' id='zurueck' class='inline'>Zurück</button>"            // Funktioniert
-        allFields += "<button onclick='deleteQuestion()'>Diese Frage löschen</button>"              // Funktioniert
-        allFields += "<button onclick='saveQuestion(1)' id='weiter' class='inline'>Weiter</button><br>"     //Funktioniert
+        var allFields = makeQString(0)
         cont.innerHTML = allFields
     } else {
         var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
@@ -153,39 +150,178 @@ function loadQuestion() {
     }
 }
 
+function makeQString(tit) {
+    console.log("Tit: ", tit)
+    var allFields
+    var n
+    q = jsondoc[jsonindex]
+    if(tit == 0 ) {
+        allFields = "<h3>Frage: " + q.id+ "</h3>"
+        allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
+        n = 0
+    } else {
+        allFields = "<h3>Frage " + q.id+ " : " +  q['text'] + "</h3>"
+        n = 1
+    }
+    allFields += "Fragentyp: " + createType(q['type']) + "<br>"
+    allFields += "<button onclick='saveQuestion(-1)' id='zurueck' class='inline'>Zurück</button>"            // Funktioniert
+    allFields += "<button onclick='deleteQuestion()'>Diese Frage löschen</button>"              // Funktioniert
+    allFields += "<button onclick='saveQuestion("+n+")' id='weiter' class='inline'>Weiter</button><br>"     //Funktioniert
+    console.log(allFields)
+    return allFields
+}
+
 /*
     Saves the informations for the question and goes back to last question or goes on to the answers
 */
 function saveQuestion(vz) {
-    fr = document.getElementById("frage").value
-    jsondoc[jsonindex]['text'] = fr
-    frt = document.getElementById('ftype').value
-    jsondoc[jsonindex]['type'] = frt
-    if(vz == 1) {
+    console.log("saveQuestion: "+ answerIndex)
+    
+    console.log(vz)
+    if(vz == 0) {
+        //Hier gibt es nur die Frage, also diese Speichern
+        fr = document.getElementById("frage").value
+        jsondoc[jsonindex]['text'] = fr
+        frt = document.getElementById('ftype').value
+        jsondoc[jsonindex]['type'] = frt
         answerIndex = 0
-        loadAnswers()
-    } else {
-        //lade vorherige Frage
+        loadFirstAnswers()
+    } else if (vz == -1) {
+        //lade vorherige Frage und Speichere Aktuelle (ACHTUNG: Standardantwort bis hier noch nicht bearbeitet)
+        fr = document.getElementById("frage").value
+        jsondoc[jsonindex]['text'] = fr
+        frt = document.getElementById('ftype').value
+        jsondoc[jsonindex]['type'] = frt
         jsonindex -= 2
         loadQuestion()
+        answerIndex = 0
+    } else {
+        //Antwort Speichern
+        var a = document.getElementById("antwort").value
+        var n = document.getElementById("nextquestion").selectedIndex
+        var f = document.getElementById("feedq").value
+
+        changeEdge(jsonindex, jsondoc[jsonindex].antworten[answerIndex-1].next, n, jsondoc[jsonindex].antworten[answerIndex-1]['wahl'])
+        console.log(jsondoc[jsonindex].antworten[answerIndex-1])
+        console.log(a)
+        jsondoc[jsonindex].antworten[answerIndex-1].text = a
+        jsondoc[jsonindex].antworten[answerIndex-1].next = n
+        jsondoc[jsonindex].antworten[answerIndex-1].feedback = f
+
+        console.log(jsondoc[jsonindex].antworten[answerIndex-1])
+
+
+        //Wie geht es weiter?
+        if (answerIndex >= jsondoc[jsonindex].antworten.length) {
+            //nach letzter Antwort
+            var newA = prompt("Das waren alle Antworten. Geben Sie 'neu' für eine weitere Antwortmöglichkeit ein. Geben Sie 'weiter' ein um zur nächsten Frage zu gehen")
+            if (newA == 'neu') {
+                //Neue Antwortmöglichkeit hinzufügen
+                sampleA = {
+                    "wahl": newWahlCounter++,
+                    "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein. Über den Button 'Neue Antwort hinzufügen' können weitere Antworten hinzugefügt werden",
+                    "next": 0,
+                    "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
+                }
+                jsondoc[jsonindex].antworten.push(sampleA)
+                loadAnswers()
+            } else if(newA == 'weiter') {
+                console.log("weiter")
+                //Zur nächsten Frage gehen
+                answerIndex = 0
+                console.log("jsondoc.length: ", jsondoc.length)
+                console.log("jsonindex: ", jsonindex)
+                if (jsonindex+1 < jsondoc.length) {
+                    console.log("load next Question")
+                    loadQuestion()
+                } else {
+                    console.log("Ask for new Question")
+                    //Wenn letzte Frage
+                    var newQ = confirm("Dies ist die letzte Frage gewesen. Soll eine neue Frage erzeugt werden?")
+                    if (newQ) {
+                        //Neue Frage erzeugen
+                        create()
+                    } else {
+                        //Keine neue Frage = Ende des Fragebogens
+                        var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
+                        allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
+                        allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
+                        cont.innerHTML = allFields
+                    }
+                }
+            } else {
+                alert("Sie haben nichts passendes Eingegeben. Nichts passiert!")
+            }
+        } else {
+            //Lade nächste Antwort
+            loadAnswers()
+        }
     }
 
 }
 
 var answerIndex = 0
 /*
-    load one answer and shows it
+    load first answer and shows it
 */
-function loadAnswers() {
+function loadFirstAnswers() {
+    console.log("load First Answer")
     q = jsondoc[jsonindex]
-    allFields = "<div class='q'>"
-    allFields += "Antwort:   <br>    <textarea id='antwort"+answerIndex+"' name='antwort"+answerIndex+"' class='ant'>"+ q['antworten'][answerIndex]['text'] +"</textarea><br>"
+    console.log(q)
+    var allFields = makeQString(1) 
+    allFields += "<div class='q'>"
+    allFields += "Antwort:   <br>    <textarea id='antwort' name='antwort' class='ant'>"+ q['antworten'][answerIndex]['text'] +"</textarea><br>"
     allFields += "Nächste Frage: <br> "+dropdown(q['antworten'][answerIndex]['next']) + "<br>"
-    allFields += "Feedback:   <br>   <textarea id='feedq"+answerIndex+"' name='feedq"+answerIndex+"' class='feed'>" +  q['antworten'][answerIndex]['feedback'] + "</textarea><br>"
+    allFields += "Feedback:   <br>   <textarea id='feedq' name='feedq' class='feed'>" +  q['antworten'][answerIndex]['feedback'] + "</textarea><br>"
     allFields += "<button onclick='deleteAnswer("+answerIndex+", this)'> Diese Antwort löschen </button> <br>"
     allFields += "</div>"
     cont.innerHTML = allFields
+    answerIndex += 1
 }
+
+function loadAnswers() {
+    console.log("load Answers")
+    console.log(answerIndex)
+    q = jsondoc[jsonindex]
+    document.getElementById("antwort").innerHTML = q['antworten'][answerIndex].text
+    document.getElementById("nextquestion").value = q['antworten'][answerIndex].next
+    document.getElementById("feedq").innerHTML = q['antworten'][answerIndex].feedback
+    answerIndex += 1
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
     Loads next question and shows all important infromation of this question
