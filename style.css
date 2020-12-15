@@ -1,5 +1,6 @@
 :root {
-    --background: #8AB1DC;
+    /*--background: #8AB1DC;*/
+    --background: #EEEEEE;
     --dark: #004796;
 }
 
@@ -28,8 +29,8 @@ input {
 textarea {
     margin-top: 10px;
     margin-left: 10px;
-    width: 500px;
-    height: 100px;
+    /*width: 500px;
+    height: 100px;*/
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
@@ -51,9 +52,9 @@ textarea {
 }
 
 button {
-    border: solid 1px var(--dark);
+    border: solid 2px var(--dark);
     border-radius: 15px;
-    margin: 10px 0px 0px 10px;
+    margin: 10px;
     font-size: medium;
 }
 
@@ -91,13 +92,13 @@ button:hover {
 }
 
 #frage {
-    width: 80%px;
-    height: 50px;
+    width: 70%;
+    height: auto;
 }
 
 .ant {
-    width: 400px;
-    height: 110px;
+    width: 90%;
+    height: auto;
 }
 
 .ne {
@@ -112,8 +113,8 @@ button:hover {
 }
 
 .feed {
-    width: 400px;
-    height: 120px;
+    width: 90%;
+    height: auto;
 }
 
 #answers {
@@ -125,8 +126,8 @@ button:hover {
 }
 
 .inline {
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 #organize {

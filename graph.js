@@ -1,3 +1,7 @@
+var normalColor = "#2C76CA"
+var hoverColor = "#032041"
+var activeColor = "#475D75"
+
 var graph = {
     "nodes": [],
     "edges": []
@@ -31,7 +35,7 @@ function prepCanvas() {
             // check if we hover it, fill red, if not fill it blue
             if(ctx.isPointInPath(x, y)) {
                 //Hover color
-                ctx.fillStyle = "#2C76CA"
+                ctx.fillStyle = hoverColor
                 ctx.font = "20px Arial";
                 lines = fragmentText("Frage: "+ r.id + " "+ r.text, can.width-20)
                 for(k = 0; k < lines.length; k++) {
@@ -158,13 +162,13 @@ function createNodesAndEdges(tree) {
             "id": tree[i].id,
             "label": "Frage " + tree[i].id,
             "text": tree[i].text,
-            "color": "#032041",
+            "color": normalColor,
             "x": 250,
             "y": 290,
             "size": 1
         }
         if(tree[i].id == activeID) {
-            newNode.color = "#475D75"
+            newNode.color = activeColor
         }
         graph.nodes.push(newNode)
         //For every Answer create an Edge
