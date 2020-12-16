@@ -11,7 +11,7 @@
     <body>
         <div class="header" id="myHeader">
             digLL Konfigurator
-            <button onclick="create()">Einen Fragebogen erstellen</button>
+            <button onclick="create(9)">Einen Fragebogen erstellen</button>
             <button onclick="modify()">Einen Fragebogen bearbeiten</button>
             <a href="help.html" id='help'>
                 <button>Hilfe</button>
@@ -23,23 +23,23 @@
             <div id="text">
                 <p id="einleitung">
                     <h3>Herzlich willkommen beim digLL Konfigurator.</h3> <br>
-                    Mit Hilfe dieses Konfigurators ist es möglich einen Fragebogen für die interaktive Hilfe für wissenschaftliches Arbeiten zu Konfigurieren. <br><br>
+                    Mit Hilfe dieses Konfigurators ist es möglich, einen Fragebogen für die interaktive Hilfe für wissenschaftliches Arbeiten zu Konfigurieren. <br><br>
                     Mit der interaktiven Hilfe für wissenschaftliches Arbeiten sollen erste Informationen über Kenntnisse und Interessen der Studenten gewonnen werden,
-                    die ein Interesse haben bei einem selbst ihre Abschlussarbeit zu schreiben.<br><br>
-                    Zum Erstellen eines Fragebogens kann dieser Konfigurator genutzt werden. Dazu kann entweder eine bestehende Vorlage (JSON) bearbeitet werden 
+                    die ein Interesse daran haben ihre Abschlussarbeit zu schreiben.<br><br>
+                    Zum Erstellen eines Fragebogens kann dieser Konfigurator genutzt werden. Dazu kann entweder eine bestehende Vorlage (JSON) bearbeitet werden, 
                     oder es kann ein komplett neuer Fragebogen erstellt werden.
                 </p>
                 <p id="anweisung">
                     Was möchten Sie tun?
                 </p>
         
-                <button onclick="create()">Einen Fragebogen erstellen</button>
+                <button onclick="create(9)">Einen Fragebogen erstellen</button>
                 <button onclick="modify()">Einen Fragebogen bearbeiten</button>
             </div>
 
             <div id="container">
                 <p id="erlaut">An dieser Stelle wird Ihr Fragebogen als Graph sichtbar sein.</p>
-                <img src="dummy.png" id="dummy">
+                <img src="dummy2.png" id="dummy">
                 <canvas id='testcanvas'width="500" height="500"></canvas>
             </div>
             

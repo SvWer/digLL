@@ -46,9 +46,11 @@ function prepCanvas() {
                 ctx.fillStyle = r.color
             }
             ctx.fill();
+            ctx.font = "12px Arial";
+            ctx.fillText("Frage: "+r.id, r.x, r.y-20)
           }
           for(j=0; j < graph.edges.length; j++) {
-            drawLineWithArrows(graph.nodes[graph.edges[j].source].x, graph.nodes[graph.edges[j].source].y, graph.nodes[graph.edges[j].target].x, graph.nodes[graph.edges[j].target].y, 5, 8, false,true)
+            drawLineWithArrows(graph.nodes[graph.edges[j].source].x, graph.nodes[graph.edges[j].source].y, graph.nodes[graph.edges[j].target].x, graph.nodes[graph.edges[j].target].y, 4, 6, false,true)
         }
     }
 
@@ -67,13 +69,13 @@ function prepCanvas() {
             // check if we hover it, fill red, if not fill it blue
             if(ctx.isPointInPath(x, y)) {
                 jsonindex = r.id-1
-                next()
+                loadQuestion()
             } else {
             }
             ctx.fill();
           }
           for(j=0; j < graph.edges.length; j++) {
-              drawLineWithArrows(graph.nodes[graph.edges[j].source].x, graph.nodes[graph.edges[j].source].y, graph.nodes[graph.edges[j].target].x, graph.nodes[graph.edges[j].target].y, 5, 8, false,true)
+              drawLineWithArrows(graph.nodes[graph.edges[j].source].x, graph.nodes[graph.edges[j].source].y, graph.nodes[graph.edges[j].target].x, graph.nodes[graph.edges[j].target].y, 4, 6, false,true)
         }
     }
 }

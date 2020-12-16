@@ -42,6 +42,8 @@ function starten() {
     If you clicked modify on the first page, this function changes the content, so you can paste the json
 */
 function modify() {
+    jsondoc = []
+    jsonindex = -1
     var getJsonArea = "<p> Bitte geben Sie den JSON-Text des Fragebogens ein</p> "
     getJsonArea += "<textarea id='jsontext' name='jsontext'></textarea> "
     getJsonArea += "<button id='start' onclick='starten()'>Zurück</button> "
@@ -68,7 +70,14 @@ function applyJson () {
     Erstellt Beispielfrage mit einer Antwort und zeigt diese als neue Frage an
 */
 fragen_counter = 0
-function create() {
+function create(p) {
+    if(p == 9) {
+        jsondoc = []
+        jsonindex = -1
+        answerIndex = 0
+        activeID = 0
+        fragen_counter = 0
+    }
     sampleQ = {
         "text":"Geben Sie hier Ihre Frage ein",
         "antworten":[],
@@ -82,7 +91,6 @@ function create() {
     }
     sampleQ.antworten.push(sampleA)
     jsondoc.push(sampleQ)
-    console.log(jsondoc)
     for(i=0; i <jsondoc.length; i++) {
         dict[jsondoc[i]['id']] = jsondoc[i]['text']
     }
@@ -145,6 +153,7 @@ function loadQuestion() {
         showPreview(q.type, q)
         var allFields = makeQString(0)
         cont.innerHTML = allFields
+        answerIndex = 0
         quest = true
     } else {
         var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
@@ -217,7 +226,22 @@ function nextQuestion(value) {
             saveQ()
         }
         answerIndex = 0
-        loadQuestion()
+        if (jsonindex+1 < jsondoc.length) {
+            loadQuestion()
+        } else {
+            //Wenn letzte Frage
+            var newQ = confirm("Dies ist die letzte Frage gewesen. Soll eine neue Frage erzeugt werden?")
+            if (newQ) {
+                //Neue Frage erzeugen
+                create(0)
+            } else {
+                //Keine neue Frage = Ende des Fragebogens
+                var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
+                allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
+                allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
+                cont.innerHTML = allFields
+            }
+        }
     }
     createNodesAndEdges(jsondoc)
 }
@@ -242,6 +266,15 @@ function saveQuestion(vz) {
             saveQ()
         }
         //Hier fehlt noch rückwärts
+        if(vz == -1) {
+            answerIndex-=2
+            if(answerIndex < 0) {
+                alert("Das ist bereits die erste Antwort!")
+                answerIndex = 0
+            }
+            loadFirstAnswers()
+            return
+        }
 
         //Wie geht es weiter?
         if (answerIndex >= jsondoc[jsonindex].antworten.length) {
@@ -269,7 +302,7 @@ function saveQuestion(vz) {
                     var newQ = confirm("Dies ist die letzte Frage gewesen. Soll eine neue Frage erzeugt werden?")
                     if (newQ) {
                         //Neue Frage erzeugen
-                        create()
+                        create(0)
                     } else {
                         //Keine neue Frage = Ende des Fragebogens
                         var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
@@ -317,319 +350,343 @@ function loadFirstAnswers() {
     allFields += "Antwort:   <br>    <textarea id='antwort' name='antwort' class='ant'>"+ q['antworten'][answerIndex]['text'] +"</textarea><br>"
     allFields += "Diese Antwort führt zu Frage: <br> "+dropdown(q['antworten'][answerIndex]['next']) + "<br>"
     allFields += "Feedback:   <br>   <textarea id='feedq' name='feedq' class='feed'>" +  q['antworten'][answerIndex]['feedback'] + "</textarea><br>"
-    allFields += "<button onclick='deleteAnswerAlt("+answerIndex+", this)'> Diese Antwort löschen </button> <br>"
+    allFields += "<button onclick='deleteAnswer()'> Diese Antwort löschen </button> <br>"
     allFields += "</div>"
     cont.innerHTML = allFields
     answerIndex += 1
     quest = false
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    Loads next question and shows all important infromation of this question
-    If all Questions have been loaded, JSON-String will be generated to copy
-*/
-function next() {
-    //change active id
-    
-    jsonindex += 1
-    if(jsonindex < jsondoc.length)
-    {
-        graph.nodes[activeID].color = normalColor
-        activeID = jsondoc[jsonindex].id
-        graph.nodes[activeID].color = activeColor
-        draw()
-        q = jsondoc[jsonindex]
-        showPreview(q.type, q)
-        var allFields = "<h3>Frage: " + q.id+ "</h3>"
-        allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
-        allFields += "Fragentyp: " + createType(q['type']) + "<br>"
-        allFields += "<button onclick='deleteQuestion()'>Diese Frage löschen</button><br>"
-        allFields += "<hr>"
-        allFields += "<h3>Antworten: </h3><br>"
-        allFields += "<div id='answers'>"
-        for(i=0; i < q['antworten'].length; i++) {
-            allFields += "<div class='q'>"
-            allFields += "Antwort:   <br>    <textarea id='antwort"+i+"' name='antwort"+i+"' class='ant'>"+ q['antworten'][i]['text'] +"</textarea><br>"
-            //allFields += "Nächste Frage: <textarea id='nextq"+i+"' name='nextq"+i+"' class='ne'>" +  q['antworten'][i]['next'] + "</textarea><br>"
-            allFields += "Nächste Frage: <br> "+dropdown(q['antworten'][i]['next']) + "<br>"
-            allFields += "Feedback:   <br>   <textarea id='feedq"+i+"' name='feedq"+i+"' class='feed'>" +  q['antworten'][i]['feedback'] + "</textarea><br>"
-            allFields += "<button onclick='deleteAnswerAlt("+i+", this)'> Diese Antwort löschen </button> <br>"
-            allFields += "</div>"
-            allFields += "<hr>"
-        }
-        allFields += "</div>"
-        allFields += "<div id='organize'>"
-        allFields += "<button onclick='save(0)' id='zurueck' class='inline'>Zurück</button>"           //Funktioniert
-        allFields += "<button onclick='addAnswer()' id='neueF' class='inline'>Neue Antwort hinzufügen</button>"   //Funktioniert
-        allFields += "<button onclick='save(1)' id='weiter' class='inline'>Weiter</button><br><br>"            //Funktioniert
-        allFields += "<button onclick='createAlt(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
-        allFields += "<button onclick='end()' id='end'>Fragebogen beenden</button>"
-        allFields += "</div>"
-        cont.innerHTML = allFields
-    } else {
-        var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
-        allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
-        allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
-        cont.innerHTML = allFields
-    }
-}
-
-/*
-    This funktion saves all fields for this question
-*/
-function save(k) {
-    fr = document.getElementById("frage").value
-    jsondoc[jsonindex]['text'] = fr
-    frt = document.getElementById('ftype').value
-    jsondoc[jsonindex]['type'] = frt
-
-    antworten = document.getElementsByClassName('ant')
-    nextref = document.getElementsByClassName('ne')
-    feeds = document.getElementsByClassName('feed')
-
-    for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
-        jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
-        changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
-        jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
-        jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value     
-    }
-    lengthAntworten = jsondoc[jsonindex]['antworten'].length
-    newAnswer = antworten.length - lengthAntworten
-    for(i=0; i < newAnswer; i++) {
-        s = {
-            "wahl" : lengthAntworten+i+1,
-            "text": "'"+antworten[lengthAntworten+i].value +"'",
-            "next": "'"+nextref[lengthAntworten+i].selectedIndex +"'",
-            "feedback": "'"+feeds[lengthAntworten+i].value +"'"
-        }
-        jsondoc[jsonindex]['antworten'].push(s)
-        addEdge(jsonindex, nextref[lengthAntworten+i].selectedIndex)
-    }
-    
-    if(k ==0) {
-        if(jsonindex > 0) {
-            jsonindex -= 2
-        } else {
-            alert("Das ist bereits die erste Frage!")
-            jsonindex -= 1
-        }
-    }
-    if(jsonindex == jsondoc.length-1) {
-        pr = prompt("Dies war die letze Frage. Geben Sie 'weiter' ein, um eine neue Frage zum Fragebogen hinzuzufügen oder geben Sie 'stop' ein, wenn Sie den Fragebogen beenden möchten.")
-        if(pr == "weiter") {
-            createAlt(0)
-            return
-        } else if (pr == "stop") {
-            end(9)
-            return
-        }
-    }
-    next()
-    
-}
-
-function deleteAnswerAlt(choice, but) {
-    if (choice == -1) {
-        p = but.parentNode
-        pp = p.parentNode
-        pp.removeChild(p)
-    } else {
-        q = jsondoc[jsonindex]
-        q.antworten.splice(choice, 1)
-        for (i=0; i< q.antworten.length; i++) {
-            q.antworten.wahl = i
-        }
-        jsonindex -= 1
-        createNodesAndEdges(jsondoc)
-        next()
-    }
-}
-
 function deleteQuestion() {
-    p = prompt("Wollen Sie diese Frage wirklich löschen? \n Alle Referenzen auf diese Frage werden dann zu Frage 0 geändert, was beim ausführen zu einem Beenden des Fragebogens führt.\n Schreiben Sie 'ja', wenn Sie die Frage wirklich löschen wollen.")
+    p = prompt("Wollen Sie diese Frage wirklich löschen? \n Alle Antworten, die auf diese Frage zeigen werden zu Frage 0 geändert, was beim ausführen zu einem Beenden des Fragebogens führt.\n Schreiben Sie 'ja', wenn Sie die Frage wirklich löschen wollen.")
     if(p == "ja") {
         jsondoc.splice(jsonindex,1)
         //Für jede Frage
         for (f=0; f < jsondoc.length; f++) {
             //Für jede Antwort
             for(a=0; a< jsondoc[f].antworten.length; a++) {
+                //jede Antwort auf gelöschte Frage wird 0
                 if (jsondoc[f].antworten[a].next == jsonindex) {
                     jsondoc[f].antworten[a].next = 0
                 }
+                //jede Antwort mit höherem Index als gelöschte, muss um 1 erniedrigt werden
+                if(jsondoc[f].antworten[a].next >= jsonindex) {
+                    jsondoc[f].antworten[a].next -= 1
+                }
             }
-
+            //Alle Indizes müssen angepasst werden, die größer sind als bei gelöschter Frage
+            if(f >= jsonindex) {
+                jsondoc[f].id -= 1
+            }
         }
         //Graph neu berechnen und nächste Frage Anzeigen
         delete dict[jsonindex]
         createNodesAndEdges(jsondoc)
         jsonindex -= 1
-        next()
+        loadQuestion()
     }
-    //Was ist mit den Referenzen??
 }
 
-function end(t = 0) {
-    if(t == 0) {
-        save()
-    } else if (t = 9) {
-
-    }else {
-        append(0)
+function deleteAnswer() {
+    q = jsondoc[jsonindex]
+    q.antworten.splice(answerIndex-1, 1)
+    for (i=0; i< q.antworten.length; i++) {
+        q.antworten[i].wahl = i
     }
-    zeroCount = 0
-    for(a = 0; a < jsondoc.length; a++) {
-        for(b=0; b < jsondoc[a].antworten.length; b++) {
-            if(jsondoc[a].antworten[b].next == 0) {
-                zeroCount += 1
-            }
-        }
-    }
-    alert("In diesem Fragebogen beenden "+ zeroCount+" Antworten den Fragebogen durch eine Referenz auf die Frage 0.")
-
-    var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
-        allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
-        allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
-        cont.innerHTML = allFields
-}
-
-/*
-    if you want to add a new answer, this function adds the empty fields
-*/
-function addAnswer( ) {
-    feld = document.getElementById('answers')
-    var s = "<div class='q'>"
-    s += "Antwort:      <br>  <textarea id='antwort"+"' name='antwort"+"' class='ant'></textarea><br>"
-    s += "Nächste Frage: <br> "+dropdown(0) + "<br>"
-    s += "Feedback:     <br> <textarea id='feedq"+"' name='feedq"+"' class='feed'></textarea><br>"
-    s += "<button onclick='deleteAnswerAlt(-1, this)'> Diese Antwort löschen </button>"
-    s += "</div>"
-    s += "<hr>"
-    feld.innerHTML += s
-}
-
-
-/*
-    Function that starts the process to create a new questionnaire
-*/
-newCount = 0
-sampleQ = {
-    "text":"Geben Sie hier Ihre Frage ein",
-    "antworten":[],
-    "id": newCount
-}
-sampleA = {
-    "wahl": 0,
-    "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein. Über den Button 'Neue Antwort hinzufügen' können weitere Antworten hinzugefügt werden",
-    "next": 5,
-    "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
-    }
-
-function createAlt(alt) {
-    if(alt == 0) {
-        newCount = Object.keys(dict).length
-        dict[newCount] = "Diese Frage"
-    }
-    var allFields = "<h3>Frage: " + newCount+ "</h3>"
-        allFields += "<textarea id='frage' name='frage'>"+sampleQ.text +"</textarea><br>"
-        allFields += "Fragentyp: " + createType(0) + "<br>"
-        allFields += "<hr>"
-        allFields += "<h3>Antworten: </h3><br>"
-        allFields += "<div id='answers'>"
-        allFields += "<div class='q'>"
-        allFields += "Antwort:   <br>    <textarea id='antwort"+0+"' name='antwort"+0+"' class='ant'>"+sampleA.text +"</textarea><br>"
-        allFields += "Nächste Frage: <br>  "+dropdown(0) + "<br>"
-        allFields += "Feedback:   <br>   <textarea id='feedq"+0+"' name='feedq"+0+"' class='feed'>"+sampleA.feedback  + "</textarea><br>"
-        allFields += "<button onclick='deleteAnswerAlt(-1, this)'> Diese Antwort löschen </button> <br>"
-        allFields += "</div>"
-        allFields += "<hr>"
-        
-        allFields += "</div>"
-        allFields += "<div id='organize'>"
-        allFields += "<button onclick='append(1)' id='zurueck' class='inline'>Zurück</button>"       //Funktioniert
-        allFields += "<button onclick='addAnswer()' class='inline'>Neue Antwort hinzufügen</button>" //Funktioniert
-        allFields += "<button onclick='append(0)' id='weiter' class='inline'>Weiter</button><br>"        //
-        allFields += "<button onclick='append(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
-        allFields += "<button onclick='end(1)' id='end'>Fragebogen beenden</button>"
-        allFields += "</div>"
-        cont.innerHTML = allFields
-}
-
-function append(n) {
-    //Diese Zeile geht so nicht, denn wenn ich einen Fragebogen bearbeite kollidiert es
-    jsonindex = newCount
-
-    fr = document.getElementById("frage").value
-    frt = document.getElementById('ftype').value
-    q = {
-        "text":fr,
-        "antworten":[],
-        "type": frt,
-        "id": newCount
-    }
-    dict[newCount++] = fr
-    antworten = document.getElementsByClassName('ant')
-    nextref = document.getElementsByClassName('ne')
-    feeds = document.getElementsByClassName('feed')
-    for(i=0; i < antworten.length; i++) {
-        s = {
-            "wahl" : i,
-            "text": antworten[i].value,
-            "next": nextref[i].selectedIndex ,
-            "feedback": feeds[i].value 
-        }
-        q.antworten.push(s)
-    }
-    jsondoc.push(q)
     createNodesAndEdges(jsondoc)
-    
-    if(n == 0) {
-        createAlt(0)
-    }else {
-        if(jsonindex > 0) {
-            jsonindex -= 2
-        } else {
-            alert("Das ist bereits die erste Frage!")
-            jsonindex -= 1
-        }
-        next()
+    //Wenn es nicht die letzte Antwort ist, die nächste anzeigen
+    if(answerIndex < q.antworten.length-1) {
+        loadFirstAnswers()
+    } else {
+        //Wenn es die letzte Antwort ist, wird die vorherige Antwort angezeigt
+        answerIndex -= 1
+        loadFirstAnswers()
     }
-
+    showPreview(jsondoc[jsonindex].type, jsondoc[jsonindex])
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /*
+//     Loads next question and shows all important infromation of this question
+//     If all Questions have been loaded, JSON-String will be generated to copy
+// */
+// function next() {
+//     //change active id
+    
+//     jsonindex += 1
+//     if(jsonindex < jsondoc.length)
+//     {
+//         graph.nodes[activeID].color = normalColor
+//         activeID = jsondoc[jsonindex].id
+//         graph.nodes[activeID].color = activeColor
+//         draw()
+//         q = jsondoc[jsonindex]
+//         showPreview(q.type, q)
+//         var allFields = "<h3>Frage: " + q.id+ "</h3>"
+//         allFields += "<textarea id='frage' name='frage'>"+ q['text'] +"</textarea><br>"
+//         allFields += "Fragentyp: " + createType(q['type']) + "<br>"
+//         allFields += "<button onclick='deleteQuestion()'>Diese Frage löschen</button><br>"
+//         allFields += "<hr>"
+//         allFields += "<h3>Antworten: </h3><br>"
+//         allFields += "<div id='answers'>"
+//         for(i=0; i < q['antworten'].length; i++) {
+//             allFields += "<div class='q'>"
+//             allFields += "Antwort:   <br>    <textarea id='antwort"+i+"' name='antwort"+i+"' class='ant'>"+ q['antworten'][i]['text'] +"</textarea><br>"
+//             //allFields += "Nächste Frage: <textarea id='nextq"+i+"' name='nextq"+i+"' class='ne'>" +  q['antworten'][i]['next'] + "</textarea><br>"
+//             allFields += "Nächste Frage: <br> "+dropdown(q['antworten'][i]['next']) + "<br>"
+//             allFields += "Feedback:   <br>   <textarea id='feedq"+i+"' name='feedq"+i+"' class='feed'>" +  q['antworten'][i]['feedback'] + "</textarea><br>"
+//             allFields += "<button onclick='deleteAnswerAlt("+i+", this)'> Diese Antwort löschen </button> <br>"
+//             allFields += "</div>"
+//             allFields += "<hr>"
+//         }
+//         allFields += "</div>"
+//         allFields += "<div id='organize'>"
+//         allFields += "<button onclick='save(0)' id='zurueck' class='inline'>Zurück</button>"           //Funktioniert
+//         allFields += "<button onclick='addAnswer()' id='neueF' class='inline'>Neue Antwort hinzufügen</button>"   //Funktioniert
+//         allFields += "<button onclick='save(1)' id='weiter' class='inline'>Weiter</button><br><br>"            //Funktioniert
+//         allFields += "<button onclick='createAlt(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
+//         allFields += "<button onclick='end()' id='end'>Fragebogen beenden</button>"
+//         allFields += "</div>"
+//         cont.innerHTML = allFields
+//     } else {
+//         var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
+//         allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
+//         allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
+//         cont.innerHTML = allFields
+//     }
+// }
+
+// /*
+//     This funktion saves all fields for this question
+// */
+// function save(k) {
+//     fr = document.getElementById("frage").value
+//     jsondoc[jsonindex]['text'] = fr
+//     frt = document.getElementById('ftype').value
+//     jsondoc[jsonindex]['type'] = frt
+
+//     antworten = document.getElementsByClassName('ant')
+//     nextref = document.getElementsByClassName('ne')
+//     feeds = document.getElementsByClassName('feed')
+
+//     for(i=0; i < jsondoc[jsonindex]['antworten'].length; i++) {
+//         jsondoc[jsonindex]['antworten'][i]['text'] = antworten[i].value
+//         changeEdge(jsonindex, jsondoc[jsonindex]['antworten'][i]['next'], nextref[i].selectedIndex, jsondoc[jsonindex]['antworten'][i]['wahl'])
+//         jsondoc[jsonindex]['antworten'][i]['next'] = nextref[i].selectedIndex
+//         jsondoc[jsonindex]['antworten'][i]['feedback'] = feeds[i].value     
+//     }
+//     lengthAntworten = jsondoc[jsonindex]['antworten'].length
+//     newAnswer = antworten.length - lengthAntworten
+//     for(i=0; i < newAnswer; i++) {
+//         s = {
+//             "wahl" : lengthAntworten+i+1,
+//             "text": "'"+antworten[lengthAntworten+i].value +"'",
+//             "next": "'"+nextref[lengthAntworten+i].selectedIndex +"'",
+//             "feedback": "'"+feeds[lengthAntworten+i].value +"'"
+//         }
+//         jsondoc[jsonindex]['antworten'].push(s)
+//         addEdge(jsonindex, nextref[lengthAntworten+i].selectedIndex)
+//     }
+    
+//     if(k ==0) {
+//         if(jsonindex > 0) {
+//             jsonindex -= 2
+//         } else {
+//             alert("Das ist bereits die erste Frage!")
+//             jsonindex -= 1
+//         }
+//     }
+//     if(jsonindex == jsondoc.length-1) {
+//         pr = prompt("Dies war die letze Frage. Geben Sie 'weiter' ein, um eine neue Frage zum Fragebogen hinzuzufügen oder geben Sie 'stop' ein, wenn Sie den Fragebogen beenden möchten.")
+//         if(pr == "weiter") {
+//             createAlt(0)
+//             return
+//         } else if (pr == "stop") {
+//             end(9)
+//             return
+//         }
+//     }
+//     next()
+    
+// }
+
+// function deleteAnswerAlt(choice, but) {
+//     if (choice == -1) {
+//         p = but.parentNode
+//         pp = p.parentNode
+//         pp.removeChild(p)
+//     } else {
+//         q = jsondoc[jsonindex]
+//         q.antworten.splice(choice, 1)
+//         for (i=0; i< q.antworten.length; i++) {
+//             q.antworten.wahl = i
+//         }
+//         jsonindex -= 1
+//         createNodesAndEdges(jsondoc)
+//         next()
+//     }
+// }
+
+
+
+// function end(t = 0) {
+//     if(t == 0) {
+//         save()
+//     } else if (t = 9) {
+
+//     }else {
+//         append(0)
+//     }
+//     zeroCount = 0
+//     for(a = 0; a < jsondoc.length; a++) {
+//         for(b=0; b < jsondoc[a].antworten.length; b++) {
+//             if(jsondoc[a].antworten[b].next == 0) {
+//                 zeroCount += 1
+//             }
+//         }
+//     }
+//     alert("In diesem Fragebogen beenden "+ zeroCount+" Antworten den Fragebogen durch eine Referenz auf die Frage 0.")
+
+//     var allFields = "Alle Fragen fertig beantwortet. Vollständiges Json siehe unten:<br>"
+//         allFields += "<textarea id='output' name='output'>"+ JSON.stringify(jsondoc) +"</textarea><br>"
+//         allFields += "<button onclick='starten()'>Zurück zum Anfang</button>"
+//         cont.innerHTML = allFields
+// }
+
+// /*
+//     if you want to add a new answer, this function adds the empty fields
+// */
+// function addAnswer( ) {
+//     feld = document.getElementById('answers')
+//     var s = "<div class='q'>"
+//     s += "Antwort:      <br>  <textarea id='antwort"+"' name='antwort"+"' class='ant'></textarea><br>"
+//     s += "Nächste Frage: <br> "+dropdown(0) + "<br>"
+//     s += "Feedback:     <br> <textarea id='feedq"+"' name='feedq"+"' class='feed'></textarea><br>"
+//     s += "<button onclick='deleteAnswerAlt(-1, this)'> Diese Antwort löschen </button>"
+//     s += "</div>"
+//     s += "<hr>"
+//     feld.innerHTML += s
+// }
+
+
+// /*
+//     Function that starts the process to create a new questionnaire
+// */
+// newCount = 0
+// sampleQ = {
+//     "text":"Geben Sie hier Ihre Frage ein",
+//     "antworten":[],
+//     "id": newCount
+// }
+// sampleA = {
+//     "wahl": 0,
+//     "text":"Geben Sie hier eine Ihrer Antwortmöglichkeiten ein. Über den Button 'Neue Antwort hinzufügen' können weitere Antworten hinzugefügt werden",
+//     "next": 5,
+//     "feedback": "Hier können Sie Feedback an den Befragten eingeben, welches Angezeigt wird, wenn diese Antwort ausgewählt wurde."
+//     }
+
+// function createAlt(alt) {
+//     if(alt == 0) {
+//         newCount = Object.keys(dict).length
+//         dict[newCount] = "Diese Frage"
+//     }
+//     var allFields = "<h3>Frage: " + newCount+ "</h3>"
+//         allFields += "<textarea id='frage' name='frage'>"+sampleQ.text +"</textarea><br>"
+//         allFields += "Fragentyp: " + createType(0) + "<br>"
+//         allFields += "<hr>"
+//         allFields += "<h3>Antworten: </h3><br>"
+//         allFields += "<div id='answers'>"
+//         allFields += "<div class='q'>"
+//         allFields += "Antwort:   <br>    <textarea id='antwort"+0+"' name='antwort"+0+"' class='ant'>"+sampleA.text +"</textarea><br>"
+//         allFields += "Nächste Frage: <br>  "+dropdown(0) + "<br>"
+//         allFields += "Feedback:   <br>   <textarea id='feedq"+0+"' name='feedq"+0+"' class='feed'>"+sampleA.feedback  + "</textarea><br>"
+//         allFields += "<button onclick='deleteAnswerAlt(-1, this)'> Diese Antwort löschen </button> <br>"
+//         allFields += "</div>"
+//         allFields += "<hr>"
+        
+//         allFields += "</div>"
+//         allFields += "<div id='organize'>"
+//         allFields += "<button onclick='append(1)' id='zurueck' class='inline'>Zurück</button>"       //Funktioniert
+//         allFields += "<button onclick='addAnswer()' class='inline'>Neue Antwort hinzufügen</button>" //Funktioniert
+//         allFields += "<button onclick='append(0)' id='weiter' class='inline'>Weiter</button><br>"        //
+//         allFields += "<button onclick='append(0)'>Neue Frage erzeugen</button><br>"          //Funktioniert
+//         allFields += "<button onclick='end(1)' id='end'>Fragebogen beenden</button>"
+//         allFields += "</div>"
+//         cont.innerHTML = allFields
+// }
+
+// function append(n) {
+//     //Diese Zeile geht so nicht, denn wenn ich einen Fragebogen bearbeite kollidiert es
+//     jsonindex = newCount
+
+//     fr = document.getElementById("frage").value
+//     frt = document.getElementById('ftype').value
+//     q = {
+//         "text":fr,
+//         "antworten":[],
+//         "type": frt,
+//         "id": newCount
+//     }
+//     dict[newCount++] = fr
+//     antworten = document.getElementsByClassName('ant')
+//     nextref = document.getElementsByClassName('ne')
+//     feeds = document.getElementsByClassName('feed')
+//     for(i=0; i < antworten.length; i++) {
+//         s = {
+//             "wahl" : i,
+//             "text": antworten[i].value,
+//             "next": nextref[i].selectedIndex ,
+//             "feedback": feeds[i].value 
+//         }
+//         q.antworten.push(s)
+//     }
+//     jsondoc.push(q)
+//     createNodesAndEdges(jsondoc)
+    
+//     if(n == 0) {
+//         createAlt(0)
+//     }else {
+//         if(jsonindex > 0) {
+//             jsonindex -= 2
+//         } else {
+//             alert("Das ist bereits die erste Frage!")
+//             jsonindex -= 1
+//         }
+//         next()
+//     }
+
+// }
 
 
 
